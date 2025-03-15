@@ -73,6 +73,7 @@
             <Button
                 Margin="10"
                 Padding="20,2"
+                Command="{Binding SyncFileNamesCommand}"
                 Content="Sync FileName" />
         </StackPanel>
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Windows.Media.Imaging;
 using Prism.Mvvm;
 
@@ -43,6 +44,22 @@ namespace ImageRenameHelper.ViewModels
                     LoadImage(selectedItem.FullName);
                 }
             }
+        }
+
+        /// <summary>
+        /// 入力されたパスにあるファイルのリストを `Files` にロードします。
+        /// </summary>
+        /// <param name="directoryPath">対象のディレクトリパスです。引数を入力しない場合は `CurrentDirectoryPath` が使われます。</param>
+        public void LoadFies(string directoryPath = null)
+        {
+            if (string.IsNullOrWhiteSpace(directoryPath))
+            {
+                directoryPath = CurrentDirectoryPath;
+            }
+
+            Files.Clear();
+            Files.AddRange(Directory.GetFiles(directoryPath).Select(f => new FileInfo(f)));
+            CurrentDirectoryPath = directoryPath;
         }
 
         private void LoadImage(string path)

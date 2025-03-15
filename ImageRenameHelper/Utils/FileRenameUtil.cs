@@ -44,7 +44,7 @@ namespace ImageRenameHelper.Utils
             // 最終ファイル名に変更
             for (var i = 0; i < a.Count; i++)
             {
-                var directoryName = a[i].DirectoryName;
+                var directoryName = b[i].DirectoryName;
                 directoryName ??= string.Empty;
 
                 var newFileName = Path.Combine(directoryName, a[i].Name);

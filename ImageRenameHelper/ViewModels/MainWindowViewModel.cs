@@ -2,7 +2,10 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using ImageRenameHelper.Utils;
+using ImTools;
+using Prism.Commands;
 using Prism.Mvvm;
 
 namespace ImageRenameHelper.ViewModels
@@ -22,6 +25,12 @@ namespace ImageRenameHelper.ViewModels
         public FileListViewModel PngInfoFileListViewModel { get; }
 
         public FileListViewModel ImageToImageTargetFileListViewModel { get; }
+
+        public DelegateCommand SyncFileNamesCommand => new (() =>
+        {
+            FileRenameUtil.RenameFiles(
+                PngInfoFileListViewModel.Files.ToList(), ImageToImageTargetFileListViewModel.Files.ToList());
+        });
 
         [Conditional("DEBUG")]
         private void SetDummies()
