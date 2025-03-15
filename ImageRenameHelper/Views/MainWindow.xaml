@@ -14,17 +14,25 @@
     mc:Ignorable="d">
 
     <Window.Resources>
-        <DataTemplate x:Key="FileListTemplate">
+        <DataTemplate x:Key="FileListTemplate" DataType="{x:Type viewModels:FileListViewModel}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="DirectoryPath" />
-                <Image Grid.Row="0" />
-                <ListBox Grid.Row="1" />
+                <TextBlock Text="{Binding CurrentDirectoryPath}" />
+
+                <Image
+                    Grid.Row="1"
+                    Height="200"
+                    Source="{Binding PreviewImageSource}" />
+
+                <ListBox
+                    Grid.Row="2"
+                    ItemsSource="{Binding Files}"
+                    SelectedItem="{Binding SelectedItem}" />
 
             </Grid>
         </DataTemplate>
@@ -41,17 +49,17 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <ListBox
+        <TextBox
             Grid.Row="0"
             Grid.Column="0"
             Grid.ColumnSpan="2" />
 
         <Border Grid.Row="1" Grid.Column="0">
-            <ContentControl Content="{Binding}" ContentTemplate="{StaticResource FileListTemplate}" />
+            <ContentControl Content="{Binding PngInfoFileListViewModel}" ContentTemplate="{StaticResource FileListTemplate}" />
         </Border>
 
         <Border Grid.Row="1" Grid.Column="1">
-            <ContentControl Content="{Binding}" ContentTemplate="{StaticResource FileListTemplate}" />
+            <ContentControl Content="{Binding ImageToImageTargetFileListViewModel}" ContentTemplate="{StaticResource FileListTemplate}" />
         </Border>
     </Grid>
 </Window>
