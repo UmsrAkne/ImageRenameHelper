@@ -8,12 +8,50 @@
     xmlns:viewModels="clr-namespace:ImageRenameHelper.ViewModels"
     Title="{Binding TextWrapper.Title}"
     Width="800"
-    Height="480"
+    Height="600"
     d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
 
+    <Window.Resources>
+        <DataTemplate x:Key="FileListTemplate">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="DirectoryPath" />
+                <Image Grid.Row="0" />
+                <ListBox Grid.Row="1" />
+
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+
     <Grid>
-        <ContentControl prism:RegionManager.RegionName="ContentRegion" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <ListBox
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2" />
+
+        <Border Grid.Row="1" Grid.Column="0">
+            <ContentControl Content="{Binding}" ContentTemplate="{StaticResource FileListTemplate}" />
+        </Border>
+
+        <Border Grid.Row="1" Grid.Column="1">
+            <ContentControl Content="{Binding}" ContentTemplate="{StaticResource FileListTemplate}" />
+        </Border>
     </Grid>
 </Window>
