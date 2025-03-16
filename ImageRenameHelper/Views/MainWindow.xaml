@@ -39,6 +39,15 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="{x:Type models:FileListItem}">
                             <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                    Width="20"
+                                    Text="{Binding LineNumber}"
+                                    TextAlignment="Center" />
+
+                                <Border
+                                    Width="1"
+                                    Margin="3,0"
+                                    Background="Black" />
                                 <TextBlock Text="{Binding Name}" />
                             </StackPanel>
                         </DataTemplate>

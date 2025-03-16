@@ -6,6 +6,7 @@ namespace ImageRenameHelper.Models
     public class FileListItem : BindableBase
     {
         private readonly FileInfo fileInfo;
+        private int lineNumber;
 
         public FileListItem(FileInfo fi)
         {
@@ -21,5 +22,7 @@ namespace ImageRenameHelper.Models
         public string DirectoryName { get; set; }
 
         public string Extension { get; set; }
+
+        public int LineNumber { get => lineNumber; set => SetProperty(ref lineNumber, value); }
     }
 }
