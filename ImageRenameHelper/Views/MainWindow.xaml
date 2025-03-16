@@ -36,6 +36,19 @@
                     Grid.Row="2"
                     ItemsSource="{Binding Files}"
                     SelectedItem="{Binding SelectedItem}">
+
+                    <ListBox.InputBindings>
+                        <KeyBinding
+                            Key="Up"
+                            Command="{Binding MoveUpCommand}"
+                            Modifiers="Alt" />
+
+                        <KeyBinding
+                            Key="Down"
+                            Command="{Binding MoveDownCommand}"
+                            Modifiers="Alt" />
+                    </ListBox.InputBindings>
+
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="{x:Type models:FileListItem}">
                             <StackPanel Orientation="Horizontal">

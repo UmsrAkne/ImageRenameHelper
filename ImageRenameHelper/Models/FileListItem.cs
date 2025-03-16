@@ -7,6 +7,7 @@ namespace ImageRenameHelper.Models
     {
         private readonly FileInfo fileInfo;
         private int lineNumber;
+        private int order;
 
         public FileListItem(FileInfo fi)
         {
@@ -21,8 +22,10 @@ namespace ImageRenameHelper.Models
 
         public string DirectoryName { get; set; }
 
-        public string Extension { get; set; }
+        public string Extension => fileInfo.Extension;
 
         public int LineNumber { get => lineNumber; set => SetProperty(ref lineNumber, value); }
+
+        public int Order { get => order; set => SetProperty(ref order, value); }
     }
 }
