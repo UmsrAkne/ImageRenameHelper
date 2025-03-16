@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using ImageRenameHelper.Models;
 using ImageRenameHelper.Utils;
 using ImTools;
 using Prism.Commands;
@@ -35,13 +36,13 @@ namespace ImageRenameHelper.ViewModels
         [Conditional("DEBUG")]
         private void SetDummies()
         {
-            var dummyList = new List<FileInfo>();
-            var dummyList2 = new List<FileInfo>();
+            var dummyList = new List<FileListItem>();
+            var dummyList2 = new List<FileListItem>();
 
             for (var i = 0; i < 10; i++)
             {
-                dummyList.Add(new FileInfo($"pngInfoImage-{i}.png"));
-                dummyList2.Add(new FileInfo($"targetImage-{i}.png"));
+                dummyList.Add(new FileListItem(new FileInfo($"pngInfoImage-{i}.png")));
+                dummyList2.Add(new FileListItem(new FileInfo($"targetImage-{i}.png")));
             }
 
             PngInfoFileListViewModel.Files.AddRange(dummyList);

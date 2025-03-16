@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Media.Imaging;
+using ImageRenameHelper.Models;
 using Prism.Mvvm;
 
 namespace ImageRenameHelper.ViewModels
@@ -10,12 +11,12 @@ namespace ImageRenameHelper.ViewModels
     // ReSharper disable once ClassNeverInstantiated.Global
     public class FileListViewModel : BindableBase
     {
-        private ObservableCollection<FileInfo> files = new ();
+        private ObservableCollection<FileListItem> files = new ();
         private string currentDirectoryPath = string.Empty;
         private FileInfo selectedItem;
         private BitmapImage previewImageSource;
 
-        public ObservableCollection<FileInfo> Files { get => files; set => SetProperty(ref files, value); }
+        public ObservableCollection<FileListItem> Files { get => files; set => SetProperty(ref files, value); }
 
         public string CurrentDirectoryPath
         {
@@ -58,7 +59,7 @@ namespace ImageRenameHelper.ViewModels
             }
 
             Files.Clear();
-            Files.AddRange(Directory.GetFiles(directoryPath).Select(f => new FileInfo(f)));
+            Files.AddRange(Directory.GetFiles(directoryPath).Select(f => new FileListItem(new FileInfo(f))));
             CurrentDirectoryPath = directoryPath;
         }
 

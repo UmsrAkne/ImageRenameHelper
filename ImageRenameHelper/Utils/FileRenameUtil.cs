@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using ImageRenameHelper.Models;
 
 namespace ImageRenameHelper.Utils
 {
@@ -12,14 +13,14 @@ namespace ImageRenameHelper.Utils
         /// <param name="a">変更名のソース。</param>
         /// <param name="b">ファイル名を変更するファイルのリスト。</param>
         /// <exception cref="ArgumentException">パラメーターに入力された２つのリストの要素数が異なる場合にスローされます。</exception>
-        public static void RenameFiles(List<FileInfo> a, List<FileInfo> b)
+        public static void RenameFiles(List<FileListItem> a, List<FileListItem> b)
         {
             if (a.Count != b.Count)
             {
                 throw new ArgumentException("Lists a and b must have the same number of elements.");
             }
 
-            var tempNames = new Dictionary<FileInfo, string>();
+            var tempNames = new Dictionary<FileListItem, string>();
 
             // ファイル変更途中の衝突を防ぐため、一時ファイル名に変更
             foreach (var targetFile in b)
