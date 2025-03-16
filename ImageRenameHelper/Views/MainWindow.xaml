@@ -88,12 +88,15 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <TextBlock
+
+        <ScrollViewer
             Grid.Row="0"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            Text="{Binding PngInfoFileListViewModel.SelectedItem.MetaDataText}"
-            TextWrapping="Wrap" />
+            VerticalScrollBarVisibility="Auto">
+
+            <TextBlock Text="{Binding PngInfoFileListViewModel.SelectedItem.MetaDataText}" TextWrapping="Wrap" />
+        </ScrollViewer>
 
         <Border Grid.Row="1" Grid.Column="0">
             <ContentControl
