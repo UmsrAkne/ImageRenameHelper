@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:ImageRenameHelper.Models"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:viewModels="clr-namespace:ImageRenameHelper.ViewModels"
     Title="{Binding TextWrapper.Title}"
@@ -34,7 +35,15 @@
                 <ListBox
                     Grid.Row="2"
                     ItemsSource="{Binding Files}"
-                    SelectedItem="{Binding SelectedItem}" />
+                    SelectedItem="{Binding SelectedItem}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:FileListItem}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Name}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
 
             </Grid>
         </DataTemplate>
