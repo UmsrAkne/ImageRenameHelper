@@ -47,6 +47,11 @@
                             Key="Down"
                             Command="{Binding MoveDownCommand}"
                             Modifiers="Alt" />
+
+                        <KeyBinding
+                            Key="Delete"
+                            Command="{Binding DeleteFileCommand}"
+                            Modifiers="Control" />
                     </ListBox.InputBindings>
 
                     <ListBox.ItemTemplate>

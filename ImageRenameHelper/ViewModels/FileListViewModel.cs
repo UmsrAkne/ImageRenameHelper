@@ -92,6 +92,21 @@ namespace ImageRenameHelper.ViewModels
             ReOrder();
         });
 
+        public DelegateCommand DeleteFileCommand => new DelegateCommand(() =>
+        {
+            if (SelectedItem == null)
+            {
+                return;
+            }
+
+            var item = SelectedItem;
+            item.FileInfo.Delete();
+            Files.Remove(item);
+            PreviewImageSource = null;
+
+            ReOrder();
+        });
+
         /// <summary>
         /// 入力されたパスにあるファイルのリストを `Files` にロードします。
         /// </summary>
