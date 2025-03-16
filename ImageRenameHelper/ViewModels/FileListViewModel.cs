@@ -44,6 +44,7 @@ namespace ImageRenameHelper.ViewModels
                 if (selectedItem?.Extension.ToLower() == ".png")
                 {
                     LoadImage(selectedItem.FullName);
+                    selectedItem.LoadMetaData();
                 }
             }
         }
