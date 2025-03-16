@@ -34,7 +34,7 @@ namespace ImageRenameHelper.ViewModels
             PngInfoFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(pngInfoDir).FullName;
             ImageToImageTargetFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(imagesDir).FullName;
 
-            SetDummies();
+            // SetDummies();
         }
 
         /// <summary>
