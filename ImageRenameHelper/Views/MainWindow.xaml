@@ -88,10 +88,12 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <TextBox
+        <TextBlock
             Grid.Row="0"
             Grid.Column="0"
-            Grid.ColumnSpan="2" />
+            Grid.ColumnSpan="2"
+            Text="{Binding PngInfoFileListViewModel.SelectedItem.MetaDataText}"
+            TextWrapping="Wrap" />
 
         <Border Grid.Row="1" Grid.Column="0">
             <ContentControl
