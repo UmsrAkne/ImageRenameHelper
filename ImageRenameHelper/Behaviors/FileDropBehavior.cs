@@ -61,7 +61,7 @@ namespace ImageRenameHelper.Behaviors
                 }
             }
 
-            viewModel.LoadFies();
+            viewModel.LoadFiles();
         }
     }
 }

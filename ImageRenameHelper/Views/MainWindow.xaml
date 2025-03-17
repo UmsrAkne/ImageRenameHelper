@@ -20,25 +20,70 @@
         <DataTemplate x:Key="FileListTemplate" DataType="{x:Type viewModels:FileListViewModel}">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="{Binding CurrentDirectoryPath}" />
+                <Border
+                    Grid.Row="0"
+                    BorderBrush="DimGray"
+                    BorderThickness="1">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <TextBlock Text="{Binding SelectedItem.MetaDataText}" TextWrapping="Wrap" />
+                    </ScrollViewer>
+                </Border>
+
+                <Border
+                    Grid.Row="1"
+                    Padding="4,1"
+                    BorderBrush="DimGray"
+                    BorderThickness="0.5">
+                    <TextBlock Text="{Binding CurrentDirectoryPath}" />
+                </Border>
 
                 <Image
-                    Grid.Row="1"
+                    Grid.Row="2"
                     Height="200"
                     Source="{Binding PreviewImageSource}" />
 
                 <ListBox
-                    Grid.Row="2"
+                    Grid.Row="3"
+                    BorderBrush="DimGray"
+                    BorderThickness="1"
                     ItemsSource="{Binding Files}"
                     SelectedItem="{Binding SelectedItem}">
+
+                    <ListBox.InputBindings>
+                        <KeyBinding
+                            Key="Up"
+                            Command="{Binding MoveUpCommand}"
+                            Modifiers="Alt" />
+
+                        <KeyBinding
+                            Key="Down"
+                            Command="{Binding MoveDownCommand}"
+                            Modifiers="Alt" />
+
+                        <KeyBinding
+                            Key="Delete"
+                            Command="{Binding DeleteFileCommand}"
+                            Modifiers="Control" />
+                    </ListBox.InputBindings>
+
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="{x:Type models:FileListItem}">
                             <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                    Width="20"
+                                    Text="{Binding LineNumber}"
+                                    TextAlignment="Center" />
+
+                                <Border
+                                    Width="1"
+                                    Margin="3,0"
+                                    Background="Black" />
                                 <TextBlock Text="{Binding Name}" />
                             </StackPanel>
                         </DataTemplate>
@@ -51,7 +96,6 @@
 
     <Grid Margin="4">
         <Grid.RowDefinitions>
-            <RowDefinition Height="150" />
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -61,12 +105,7 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <TextBox
-            Grid.Row="0"
-            Grid.Column="0"
-            Grid.ColumnSpan="2" />
-
-        <Border Grid.Row="1" Grid.Column="0">
+        <Border Grid.Row="0" Grid.Column="0">
             <ContentControl
                 AllowDrop="True"
                 Content="{Binding}"
@@ -79,7 +118,7 @@
             </ContentControl>
         </Border>
 
-        <Border Grid.Row="1" Grid.Column="1">
+        <Border Grid.Row="0" Grid.Column="1">
             <ContentControl
                 AllowDrop="True"
                 Content="{Binding}"
@@ -93,7 +132,7 @@
         </Border>
 
         <StackPanel
-            Grid.Row="2"
+            Grid.Row="1"
             Grid.Column="0"
             Grid.ColumnSpan="2"
             HorizontalAlignment="Right"

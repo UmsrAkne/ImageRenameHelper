@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Media.Imaging;
 using ImageRenameHelper.Models;
+using Prism.Commands;
 using Prism.Mvvm;
 
 namespace ImageRenameHelper.ViewModels
@@ -13,7 +14,7 @@ namespace ImageRenameHelper.ViewModels
     {
         private ObservableCollection<FileListItem> files = new ();
         private string currentDirectoryPath = string.Empty;
-        private FileInfo selectedItem;
+        private FileListItem selectedItem;
         private BitmapImage previewImageSource;
 
         public ObservableCollection<FileListItem> Files { get => files; set => SetProperty(ref files, value); }
@@ -30,7 +31,7 @@ namespace ImageRenameHelper.ViewModels
             set => SetProperty(ref previewImageSource, value);
         }
 
-        public FileInfo SelectedItem
+        public FileListItem SelectedItem
         {
             get => selectedItem;
             set
@@ -40,18 +41,78 @@ namespace ImageRenameHelper.ViewModels
                     return;
                 }
 
-                if (selectedItem.Extension.ToLower() == ".png")
+                if (selectedItem?.Extension.ToLower() == ".png")
                 {
                     LoadImage(selectedItem.FullName);
+                    selectedItem.LoadMetaData();
                 }
             }
         }
+
+        public DelegateCommand MoveUpCommand => new (() =>
+        {
+            if (Files.Count == 0 || SelectedItem == null)
+            {
+                return;
+            }
+
+            var index = Files.IndexOf(SelectedItem);
+            var item = SelectedItem;
+
+            if (index <= 0)
+            {
+                return;
+            }
+
+            Files.Remove(item);
+            Files.Insert(index - 1, item);
+            SelectedItem = item;
+
+            ReOrder();
+        });
+
+        public DelegateCommand MoveDownCommand => new (() =>
+        {
+            if (Files.Count <= 1 || SelectedItem == null)
+            {
+                return;
+            }
+
+            var index = Files.IndexOf(SelectedItem);
+            var item = SelectedItem;
+
+            if (index < 0 || index >= Files.Count - 1)
+            {
+                return;
+            }
+
+            Files.Remove(item);
+            Files.Insert(index + 1, item);
+            SelectedItem = item;
+
+            ReOrder();
+        });
+
+        public DelegateCommand DeleteFileCommand => new DelegateCommand(() =>
+        {
+            if (SelectedItem == null)
+            {
+                return;
+            }
+
+            var item = SelectedItem;
+            item.FileInfo.Delete();
+            Files.Remove(item);
+            PreviewImageSource = null;
+
+            ReOrder();
+        });
 
         /// <summary>
         /// 入力されたパスにあるファイルのリストを `Files` にロードします。
         /// </summary>
         /// <param name="directoryPath">対象のディレクトリパスです。引数を入力しない場合は `CurrentDirectoryPath` が使われます。</param>
-        public void LoadFies(string directoryPath = null)
+        public void LoadFiles(string directoryPath = null)
         {
             if (string.IsNullOrWhiteSpace(directoryPath))
             {
@@ -60,6 +121,12 @@ namespace ImageRenameHelper.ViewModels
 
             Files.Clear();
             Files.AddRange(Directory.GetFiles(directoryPath).Select(f => new FileListItem(new FileInfo(f))));
+            for (var i = 0; i < Files.Count; i++)
+            {
+                Files[i].LineNumber = i + 1;
+                Files[i].Order = i + 1;
+            }
+
             CurrentDirectoryPath = directoryPath;
         }
 
@@ -78,6 +145,14 @@ namespace ImageRenameHelper.ViewModels
             bitmap.Freeze(); // UIスレッド以外でも安全に使うため
 
             PreviewImageSource = bitmap;
+        }
+
+        private void ReOrder()
+        {
+            for (var i = 0; i < Files.Count; i++)
+            {
+                Files[i].Order = i + 1;
+            }
         }
     }
 }
