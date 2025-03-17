@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using ImageRenameHelper.Models;
 using ImageRenameHelper.Utils;
-using ImTools;
 using Prism.Commands;
 using Prism.Mvvm;
 
