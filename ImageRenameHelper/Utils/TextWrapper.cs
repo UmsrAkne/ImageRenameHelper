@@ -29,10 +29,10 @@ namespace ImageRenameHelper.Utils
         [Conditional("RELEASE")]
         private void SetVersion()
         {
-            const int major = 0;
+            const int major = 1;
             const int minor = 0;
-            const int patch = 1;
-            const string date = "20250316";
+            const int patch = 0;
+            const string date = "20250317";
             const string suffixId = "a";
 
             Version = $"{major}.{minor}.{patch} ({date}{suffixId})";
