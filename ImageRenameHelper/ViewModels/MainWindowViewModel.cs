@@ -90,6 +90,11 @@ namespace ImageRenameHelper.ViewModels
             Message = string.Empty;
         });
 
+        public DelegateCommand ToggleCursorSyncModeCommand => new (() =>
+        {
+            EnabledCursorPositionSyncMode = !EnabledCursorPositionSyncMode;
+        });
+
         [Conditional("DEBUG")]
         private void SetDummies()
         {

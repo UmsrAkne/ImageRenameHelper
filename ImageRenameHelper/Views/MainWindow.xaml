@@ -17,6 +17,13 @@
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
 
+    <Window.InputBindings>
+        <KeyBinding
+            Key="S"
+            Command="{Binding ToggleCursorSyncModeCommand}"
+            Modifiers="Control" />
+    </Window.InputBindings>
+
     <Window.Resources>
         <DataTemplate x:Key="FileListTemplate" DataType="{x:Type viewModels:FileListViewModel}">
             <Grid>
