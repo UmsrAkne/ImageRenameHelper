@@ -14,6 +14,8 @@ namespace ImageRenameHelper.ViewModels
     // ReSharper disable once ClassNeverInstantiated.Global
     public class MainWindowViewModel : BindableBase
     {
+        private string message;
+
         public MainWindowViewModel()
         {
             PngInfoFileListViewModel = new FileListViewModel();
@@ -44,14 +46,24 @@ namespace ImageRenameHelper.ViewModels
 
         public TextWrapper TextWrapper { get; set; } = new ();
 
+        public string Message { get => message; set => SetProperty(ref message, value); }
+
         public FileListViewModel PngInfoFileListViewModel { get; }
 
         public FileListViewModel ImageToImageTargetFileListViewModel { get; }
 
         public DelegateCommand SyncFileNamesCommand => new (() =>
         {
+            if (PngInfoFileListViewModel.Files.Count() != ImageToImageTargetFileListViewModel.Files.Count())
+            {
+                Message = "リネーム操作は左右のリストのファイル数が同数でなければ実行できません。";
+                return;
+            }
+
             FileRenameUtil.RenameFiles(
                 PngInfoFileListViewModel.Files.ToList(), ImageToImageTargetFileListViewModel.Files.ToList());
+
+            Message = string.Empty;
         });
 
         [Conditional("DEBUG")]
