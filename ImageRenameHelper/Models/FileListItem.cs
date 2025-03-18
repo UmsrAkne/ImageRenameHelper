@@ -7,6 +7,7 @@ namespace ImageRenameHelper.Models
 {
     public class FileListItem : BindableBase
     {
+        private readonly string noMetadataMessage = "No metadata found in the PNG file.";
         private readonly FileInfo fileInfo;
         private int lineNumber;
         private int order;
@@ -56,6 +57,11 @@ namespace ImageRenameHelper.Models
                         MetaDataText += $"{tag.Name}: {tag.Description}";
                     }
                 }
+            }
+
+            if (string.IsNullOrWhiteSpace(MetaDataText))
+            {
+                MetaDataText = noMetadataMessage;
             }
         }
     }
