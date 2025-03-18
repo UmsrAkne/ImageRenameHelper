@@ -15,6 +15,8 @@ namespace ImageRenameHelper.ViewModels
     public class MainWindowViewModel : BindableBase
     {
         private string message;
+        private int selectedIndex;
+        private bool enabledCursorPositionSyncMode;
 
         public MainWindowViewModel()
         {
@@ -51,6 +53,28 @@ namespace ImageRenameHelper.ViewModels
         public FileListViewModel PngInfoFileListViewModel { get; }
 
         public FileListViewModel ImageToImageTargetFileListViewModel { get; }
+
+        public bool EnabledCursorPositionSyncMode
+        {
+            get => enabledCursorPositionSyncMode;
+            set => SetProperty(ref enabledCursorPositionSyncMode, value);
+        }
+
+        public int SelectedIndex
+        {
+            get => selectedIndex;
+            set
+            {
+                if (!EnabledCursorPositionSyncMode)
+                {
+                    return;
+                }
+
+                PngInfoFileListViewModel.SelectedIndex = value;
+                ImageToImageTargetFileListViewModel.SelectedIndex = value;
+                SetProperty(ref selectedIndex, value);
+            }
+        }
 
         public DelegateCommand SyncFileNamesCommand => new (() =>
         {
