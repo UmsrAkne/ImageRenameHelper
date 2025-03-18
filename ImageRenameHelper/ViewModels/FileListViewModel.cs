@@ -16,6 +16,7 @@ namespace ImageRenameHelper.ViewModels
         private string currentDirectoryPath = string.Empty;
         private FileListItem selectedItem;
         private BitmapImage previewImageSource;
+        private int selectedIndex;
 
         public ObservableCollection<FileListItem> Files { get => files; set => SetProperty(ref files, value); }
 
@@ -46,6 +47,32 @@ namespace ImageRenameHelper.ViewModels
                     LoadImage(selectedItem.FullName);
                     selectedItem.LoadMetaData();
                 }
+            }
+        }
+
+        public int SelectedIndex
+        {
+            get => selectedIndex;
+            set
+            {
+                if (!Files.Any())
+                {
+                    value = -1;
+                    SetProperty(ref selectedIndex, value);
+                    return;
+                }
+
+                if (value < 0)
+                {
+                    value = -1;
+                }
+
+                if (value >= Files.Count())
+                {
+                    value = Files.Count - 1;
+                }
+
+                SetProperty(ref selectedIndex, value);
             }
         }
 

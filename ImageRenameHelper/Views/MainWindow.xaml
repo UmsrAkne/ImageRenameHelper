@@ -9,12 +9,20 @@
     xmlns:models="clr-namespace:ImageRenameHelper.Models"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:viewModels="clr-namespace:ImageRenameHelper.ViewModels"
+    xmlns:views="clr-namespace:ImageRenameHelper.Views"
     Title="{Binding TextWrapper.Title}"
     Width="800"
     Height="600"
     d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
+
+    <Window.InputBindings>
+        <KeyBinding
+            Key="S"
+            Command="{Binding ToggleCursorSyncModeCommand}"
+            Modifiers="Control" />
+    </Window.InputBindings>
 
     <Window.Resources>
         <DataTemplate x:Key="FileListTemplate" DataType="{x:Type viewModels:FileListViewModel}">
@@ -53,6 +61,7 @@
                     BorderBrush="DimGray"
                     BorderThickness="1"
                     ItemsSource="{Binding Files}"
+                    SelectedIndex="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=views:MainWindow}, Path=DataContext.SelectedIndex}"
                     SelectedItem="{Binding SelectedItem}">
 
                     <ListBox.InputBindings>
@@ -134,15 +143,40 @@
         <StackPanel
             Grid.Row="1"
             Grid.Column="0"
-            Grid.ColumnSpan="2"
-            HorizontalAlignment="Right"
-            Orientation="Horizontal">
+            Grid.ColumnSpan="2">
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
 
-            <Button
-                Margin="10"
-                Padding="20,2"
-                Command="{Binding SyncFileNamesCommand}"
-                Content="Sync FileName" />
+                <ToggleButton
+                    Margin="30,10"
+                    Padding="20,2"
+                    IsChecked="{Binding EnabledCursorPositionSyncMode}">
+                    <ToggleButton.Style>
+                        <Style TargetType="ToggleButton">
+                            <Style.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Background" Value="LightBlue" />
+                                    <Setter Property="Content" Value="Cursor Sync: ON" />
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="False">
+                                    <Setter Property="Background" Value="FloralWhite" />
+                                    <Setter Property="Content" Value="Cursor Sync: OFF" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+                </ToggleButton>
+
+                <Button
+                    Margin="10"
+                    Padding="20,2"
+                    Command="{Binding SyncFileNamesCommand}"
+                    Content="Sync FileName" />
+
+            </StackPanel>
+
+            <Border Padding="2" Background="LightBlue">
+                <TextBlock Text="{Binding Message}" />
+            </Border>
         </StackPanel>
 
     </Grid>
