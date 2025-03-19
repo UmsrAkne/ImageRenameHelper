@@ -154,11 +154,7 @@ namespace ImageRenameHelper.ViewModels
 
             Files.Clear();
             Files.AddRange(Directory.GetFiles(directoryPath).Select(f => new FileListItem(new FileInfo(f))));
-            for (var i = 0; i < Files.Count; i++)
-            {
-                Files[i].LineNumber = i + 1;
-                Files[i].Order = i + 1;
-            }
+            ReOrder();
 
             CurrentDirectoryPath = directoryPath;
         }
