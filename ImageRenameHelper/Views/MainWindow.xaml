@@ -48,7 +48,17 @@
                     Padding="4,1"
                     BorderBrush="DimGray"
                     BorderThickness="0.5">
-                    <TextBlock Text="{Binding CurrentDirectoryPath}" />
+                    <StackPanel>
+                        <TextBlock Text="{Binding CurrentDirectoryPath}" />
+
+                        <StackPanel Orientation="Horizontal">
+                            <Button
+                                Margin="0,2"
+                                Padding="10,1"
+                                Command="{Binding CopyWorkingDirectoryPathCommand}"
+                                Content="Copy Folder Path" />
+                        </StackPanel>
+                    </StackPanel>
                 </Border>
 
                 <Image

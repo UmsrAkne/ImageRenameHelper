@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using ImageRenameHelper.Models;
 using Prism.Commands;
@@ -133,6 +134,11 @@ namespace ImageRenameHelper.ViewModels
             PreviewImageSource = null;
 
             ReOrder();
+        });
+
+        public DelegateCommand CopyWorkingDirectoryPathCommand => new (() =>
+        {
+            Clipboard.SetText(CurrentDirectoryPath);
         });
 
         /// <summary>
