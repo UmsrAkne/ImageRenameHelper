@@ -184,7 +184,8 @@ namespace ImageRenameHelper.ViewModels
         {
             for (var i = 0; i < Files.Count; i++)
             {
-                Files[i].Order = i + 1;
+                Files[i].Order = i;
+                Files[i].LineNumber = i + 1;
             }
         }
     }
