@@ -23,7 +23,7 @@
 
         <StackPanel Grid.Row="0">
             <TextBlock Margin="0,0,0,3" Text="Working Directory Name :" />
-            <TextBox x:Name="DefaultTextBox" Text="" />
+            <TextBox x:Name="DefaultTextBox" Text="{Binding WorkingDirectoryName, UpdateSourceTrigger=PropertyChanged}" />
 
         </StackPanel>
 
@@ -35,8 +35,13 @@
             <Button
                 Margin="10,0"
                 Padding="15,0"
+                Command="{Binding ConfirmCommand}"
                 Content="Switch and Create Directory" />
-            <Button Padding="15,0" Content="CancelCommand (esc)" />
+
+            <Button
+                Padding="15,0"
+                Command="{Binding CancelCommand}"
+                Content="CancelCommand (esc)" />
         </StackPanel>
     </Grid>
 </Page>

@@ -35,6 +35,11 @@ namespace ImageRenameHelper.ViewModels
         public MainWindowViewModel(IContainerProvider containerProvider)
         {
             dialogService = containerProvider.Resolve<IDialogService>();
+
+            PngInfoFileListViewModel = new FileListViewModel();
+            ImageToImageTargetFileListViewModel = new FileListViewModel();
+
+            SetupWorkingDirectories();
         }
 
         /// <summary>
@@ -95,15 +100,23 @@ namespace ImageRenameHelper.ViewModels
 
         public DelegateCommand ShowWorkingDirectoryChangePageCommand => new DelegateCommand(() =>
         {
-            dialogService.ShowDialog(nameof(WorkingDirectoryChangePage), new DialogParameters(), _ => { });
+            dialogService.ShowDialog(nameof(WorkingDirectoryChangePage), new DialogParameters(), result =>
+            {
+                if (result.Result == ButtonResult.OK)
+                {
+                    SetupWorkingDirectories(
+                        result.Parameters.GetValue<string>(
+                            nameof(WorkingDirectoryChangePageViewModel.WorkingDirectoryName)));
+                }
+            });
         });
 
         /// <summary>
         /// 作業ディレクトリを作成し、`PngInfoFileListViewModel` と `ImageToImageTargetFileListViewModel` の CurrentDirectoryPath にセットします。<br/>
         /// 作業ディレクトリのベースディレクトリは日時からネーミングされます。
         /// </summary>
-        /// <param name="currentDirectoryPath">作業ディレクトリのフルパスを指定します。無指定の場合、作業ディレクトリの名前は自動決定・作成されます。</param>
-        private void SetupWorkingDirectories(string currentDirectoryPath = "")
+        /// <param name="currentDirectoryName">作業ディレクトリのフルパスを指定します。無指定の場合、作業ディレクトリの名前は自動決定・作成されます。</param>
+        private void SetupWorkingDirectories(string currentDirectoryName = "")
         {
             var workingDir = new DirectoryInfo("working-directories");
             if (!workingDir.Exists)
@@ -111,9 +124,11 @@ namespace ImageRenameHelper.ViewModels
                 Directory.CreateDirectory(workingDir.FullName);
             }
 
-            CurrentDirectory = currentDirectoryPath == string.Empty
-                    ? new DirectoryInfo(Path.Combine(workingDir.FullName, DateTime.Now.ToString("yyyyMMdd_HHmmss_fff")))
-                    : new DirectoryInfo(currentDirectoryPath);
+            var dirName = string.IsNullOrEmpty(currentDirectoryName)
+                ? DateTime.Now.ToString("yyyyMMdd_HHmmss_fff")
+                : currentDirectoryName;
+
+            CurrentDirectory = new DirectoryInfo(Path.Combine(workingDir.FullName, dirName));
 
             var pngInfoDir = Path.Combine(CurrentDirectory.FullName, "png-info-images");
             var imagesDir = Path.Combine(CurrentDirectory.FullName, "target-images");
@@ -123,9 +138,13 @@ namespace ImageRenameHelper.ViewModels
                 ? pngInfoDir
                 : Directory.CreateDirectory(pngInfoDir).FullName;
 
+            PngInfoFileListViewModel.LoadFiles();
+
             ImageToImageTargetFileListViewModel.CurrentDirectoryPath = Directory.Exists(imagesDir)
                 ? imagesDir
                 : Directory.CreateDirectory(imagesDir).FullName;
+
+            ImageToImageTargetFileListViewModel.LoadFiles();
         }
 
         [Conditional("DEBUG")]

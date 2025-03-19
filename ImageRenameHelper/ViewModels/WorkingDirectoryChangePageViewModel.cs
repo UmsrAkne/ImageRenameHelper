@@ -8,9 +8,17 @@ namespace ImageRenameHelper.ViewModels
     // ReSharper disable once ClassNeverInstantiated.Global
     public class WorkingDirectoryChangePageViewModel : BindableBase, IDialogAware
     {
+        private string workingDirectoryName = string.Empty;
+
         public event Action<IDialogResult> RequestClose;
 
         public string Title => string.Empty;
+
+        public string WorkingDirectoryName
+        {
+            get => workingDirectoryName;
+            set => SetProperty(ref workingDirectoryName, value);
+        }
 
         public DelegateCommand CancelCommand => new (() =>
         {
@@ -19,7 +27,10 @@ namespace ImageRenameHelper.ViewModels
 
         public DelegateCommand ConfirmCommand => new DelegateCommand(() =>
         {
-            RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
+            var result = new DialogResult(ButtonResult.OK);
+            result.Parameters.Add(nameof(WorkingDirectoryName), WorkingDirectoryName);
+
+            RequestClose?.Invoke(result);
         });
 
         public bool CanCloseDialog() => true;
