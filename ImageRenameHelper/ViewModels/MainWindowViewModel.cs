@@ -87,6 +87,7 @@ namespace ImageRenameHelper.ViewModels
             FileRenameUtil.RenameFiles(
                 PngInfoFileListViewModel.Files.ToList(), ImageToImageTargetFileListViewModel.Files.ToList());
 
+            ImageToImageTargetFileListViewModel.LoadFiles();
             Message = string.Empty;
         });
 
