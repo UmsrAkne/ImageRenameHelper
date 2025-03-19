@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using ImageRenameHelper.ViewModels;
 using ImageRenameHelper.Views;
 using Prism.Ioc;
 
@@ -16,6 +17,7 @@ namespace ImageRenameHelper
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterDialog<WorkingDirectoryChangePage, WorkingDirectoryChangePageViewModel>();
         }
     }
 }

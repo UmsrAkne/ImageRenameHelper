@@ -22,6 +22,11 @@
             Key="S"
             Command="{Binding ToggleCursorSyncModeCommand}"
             Modifiers="Control" />
+
+        <KeyBinding
+            Key="N"
+            Command="{Binding ShowWorkingDirectoryChangePageCommand}"
+            Modifiers="Control+Shift" />
     </Window.InputBindings>
 
     <Window.Resources>

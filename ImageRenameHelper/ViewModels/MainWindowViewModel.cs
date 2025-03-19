@@ -6,14 +6,18 @@ using System.IO;
 using System.Linq;
 using ImageRenameHelper.Models;
 using ImageRenameHelper.Utils;
+using ImageRenameHelper.Views;
 using Prism.Commands;
+using Prism.Ioc;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
 
 namespace ImageRenameHelper.ViewModels
 {
     // ReSharper disable once ClassNeverInstantiated.Global
     public class MainWindowViewModel : BindableBase
     {
+        private readonly IDialogService dialogService;
         private string message;
         private int selectedIndex;
         private bool enabledCursorPositionSyncMode;
@@ -26,6 +30,11 @@ namespace ImageRenameHelper.ViewModels
             SetupWorkingDirectories();
 
             // SetDummies();
+        }
+
+        public MainWindowViewModel(IContainerProvider containerProvider)
+        {
+            dialogService = containerProvider.Resolve<IDialogService>();
         }
 
         /// <summary>
@@ -82,6 +91,11 @@ namespace ImageRenameHelper.ViewModels
         public DelegateCommand ToggleCursorSyncModeCommand => new (() =>
         {
             EnabledCursorPositionSyncMode = !EnabledCursorPositionSyncMode;
+        });
+
+        public DelegateCommand ShowWorkingDirectoryChangePageCommand => new DelegateCommand(() =>
+        {
+            dialogService.ShowDialog(nameof(WorkingDirectoryChangePage), new DialogParameters(), _ => { });
         });
 
         /// <summary>
