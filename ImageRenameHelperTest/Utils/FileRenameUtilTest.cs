@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using ImageRenameHelper.Models;
 using ImageRenameHelper.Utils;
 
@@ -7,23 +6,26 @@ namespace ImageRenameHelperTest.Utils
     [TestFixture]
     public class RenameFilesTests
     {
-        private string testDirectory;
+        private string testDirectory1;
+        private string testDirectory2;
         private List<FileListItem> originalFiles;
         private List<FileListItem> targetFiles;
 
         [SetUp]
         public void Setup()
         {
-            testDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-            Directory.CreateDirectory(testDirectory);
+            testDirectory1 = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            testDirectory2 = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            Directory.CreateDirectory(testDirectory1);
+            Directory.CreateDirectory(testDirectory2);
 
             originalFiles = new List<FileListItem>();
             targetFiles = new List<FileListItem>();
 
             for (var i = 0; i < 3; i++)
             {
-                var originalFilePath = Path.Combine(testDirectory, $"OriginalFile{i}.txt");
-                var targetFilePath = Path.Combine(testDirectory, $"TargetFile{i}.txt");
+                var originalFilePath = Path.Combine(testDirectory1, $"OriginalFile{i}.txt");
+                var targetFilePath = Path.Combine(testDirectory2, $"TargetFile{i}.txt");
 
                 File.WriteAllText(originalFilePath, "Test Content");
                 File.WriteAllText(targetFilePath, "Test Content");
@@ -36,7 +38,7 @@ namespace ImageRenameHelperTest.Utils
         [TearDown]
         public void Cleanup()
         {
-            Directory.Delete(testDirectory, true);
+            Directory.Delete(testDirectory1, true);
         }
 
         [Test]
@@ -46,9 +48,9 @@ namespace ImageRenameHelperTest.Utils
 
             for (var i = 0; i < originalFiles.Count; i++)
             {
-                Debug.WriteLine($"count = {i}(FileRenameUtilTest : 51)");
-                var expectedPath = Path.Combine(testDirectory, originalFiles[i].Name);
-                Assert.IsTrue(File.Exists(expectedPath), $"Expected file {expectedPath} does not exist");
+                System.Diagnostics.Debug.WriteLine($"count = {i}(FileRenameUtilTest : 51)");
+                var expectedPath = Path.Combine(testDirectory2, originalFiles[i].Name);
+                Assert.That(File.Exists(expectedPath), Is.True, $"Expected file {expectedPath} does not exist");
             }
         }
     }
