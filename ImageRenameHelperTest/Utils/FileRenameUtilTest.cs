@@ -4,54 +4,53 @@ using ImageRenameHelper.Utils;
 namespace ImageRenameHelperTest.Utils
 {
     [TestFixture]
-    public class FileRenameUtilTest
+    public class RenameFilesTests
     {
-        [TestFixture]
-        public class RenameFilesTests
+        private string testDirectory1;
+        private string testDirectory2;
+        private List<FileListItem> originalFiles;
+        private List<FileListItem> targetFiles;
+
+        [SetUp]
+        public void Setup()
         {
-            private string testDirectory;
-            private List<FileListItem> originalFiles;
-            private List<FileListItem> targetFiles;
+            testDirectory1 = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            testDirectory2 = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            Directory.CreateDirectory(testDirectory1);
+            Directory.CreateDirectory(testDirectory2);
 
-            [SetUp]
-            public void Setup()
+            originalFiles = new List<FileListItem>();
+            targetFiles = new List<FileListItem>();
+
+            for (var i = 0; i < 3; i++)
             {
-                testDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-                Directory.CreateDirectory(testDirectory);
+                var originalFilePath = Path.Combine(testDirectory1, $"OriginalFile{i}.txt");
+                var targetFilePath = Path.Combine(testDirectory2, $"TargetFile{i}.txt");
 
-                originalFiles = new List<FileListItem>();
-                targetFiles = new List<FileListItem>();
+                File.WriteAllText(originalFilePath, "Test Content");
+                File.WriteAllText(targetFilePath, "Test Content");
 
-                for (var i = 0; i < 3; i++)
-                {
-                    var originalFilePath = Path.Combine(testDirectory, $"OriginalFile{i}.txt");
-                    var targetFilePath = Path.Combine(testDirectory, $"TargetFile{i}.txt");
-
-                    File.WriteAllText(originalFilePath, "Test Content");
-                    File.WriteAllText(targetFilePath, "Test Content");
-
-                    originalFiles.Add(new FileListItem(new FileInfo(originalFilePath)));
-                    targetFiles.Add(new FileListItem(new FileInfo(targetFilePath)));
-                }
+                originalFiles.Add(new FileListItem(new FileInfo(originalFilePath)));
+                targetFiles.Add(new FileListItem(new FileInfo(targetFilePath)));
             }
+        }
 
-            [TearDown]
-            public void Cleanup()
+        [TearDown]
+        public void Cleanup()
+        {
+            Directory.Delete(testDirectory1, true);
+        }
+
+        [Test]
+        public void RenameFiles_ShouldRenameTargetFilesToOriginalNames()
+        {
+            FileRenameUtil.RenameFiles(originalFiles, targetFiles);
+
+            for (var i = 0; i < originalFiles.Count; i++)
             {
-                Directory.Delete(testDirectory, true);
-            }
-
-            [Test]
-            public void RenameFiles_ShouldRenameTargetFilesToOriginalNames()
-            {
-                FileRenameUtil.RenameFiles(originalFiles, targetFiles);
-
-                for (var i = 0; i < originalFiles.Count; i++)
-                {
-                    System.Diagnostics.Debug.WriteLine($"count = {i}(FileRenameUtilTest : 51)");
-                    var expectedPath = Path.Combine(testDirectory, originalFiles[i].Name);
-                    Assert.IsTrue(File.Exists(expectedPath), $"Expected file {expectedPath} does not exist");
-                }
+                System.Diagnostics.Debug.WriteLine($"count = {i}(FileRenameUtilTest : 51)");
+                var expectedPath = Path.Combine(testDirectory2, originalFiles[i].Name);
+                Assert.That(File.Exists(expectedPath), Is.True, $"Expected file {expectedPath} does not exist");
             }
         }
     }

@@ -24,7 +24,7 @@ namespace ImageRenameHelper.Models
 
         public string FullName => FileInfo.FullName;
 
-        public string DirectoryName { get; set; }
+        public string DirectoryName => FileInfo.DirectoryName ?? string.Empty;
 
         public string Extension => fileInfo.Extension;
 

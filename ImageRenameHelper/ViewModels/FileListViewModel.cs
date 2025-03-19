@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using ImageRenameHelper.Models;
 using Prism.Commands;
@@ -135,6 +136,11 @@ namespace ImageRenameHelper.ViewModels
             ReOrder();
         });
 
+        public DelegateCommand CopyWorkingDirectoryPathCommand => new (() =>
+        {
+            Clipboard.SetText(CurrentDirectoryPath);
+        });
+
         /// <summary>
         /// 入力されたパスにあるファイルのリストを `Files` にロードします。
         /// </summary>
@@ -148,11 +154,7 @@ namespace ImageRenameHelper.ViewModels
 
             Files.Clear();
             Files.AddRange(Directory.GetFiles(directoryPath).Select(f => new FileListItem(new FileInfo(f))));
-            for (var i = 0; i < Files.Count; i++)
-            {
-                Files[i].LineNumber = i + 1;
-                Files[i].Order = i + 1;
-            }
+            ReOrder();
 
             CurrentDirectoryPath = directoryPath;
         }
@@ -178,7 +180,8 @@ namespace ImageRenameHelper.ViewModels
         {
             for (var i = 0; i < Files.Count; i++)
             {
-                Files[i].Order = i + 1;
+                Files[i].Order = i;
+                Files[i].LineNumber = i + 1;
             }
         }
     }
