@@ -88,7 +88,8 @@ namespace ImageRenameHelper.ViewModels
         /// 作業ディレクトリを作成し、`PngInfoFileListViewModel` と `ImageToImageTargetFileListViewModel` の CurrentDirectoryPath にセットします。<br/>
         /// 作業ディレクトリのベースディレクトリは日時からネーミングされます。
         /// </summary>
-        private void SetupWorkingDirectories()
+        /// <param name="currentDirectoryPath">作業ディレクトリのフルパスを指定します。無指定の場合、作業ディレクトリの名前は自動決定・作成されます。</param>
+        private void SetupWorkingDirectories(string currentDirectoryPath = "")
         {
             var workingDir = new DirectoryInfo("working-directories");
             if (!workingDir.Exists)
@@ -96,13 +97,21 @@ namespace ImageRenameHelper.ViewModels
                 Directory.CreateDirectory(workingDir.FullName);
             }
 
-            CurrentDirectory = new DirectoryInfo(Path.Combine(workingDir.FullName, DateTime.Now.ToString("yyyyMMdd_HHmmss_fff")));
+            CurrentDirectory = currentDirectoryPath == string.Empty
+                    ? new DirectoryInfo(Path.Combine(workingDir.FullName, DateTime.Now.ToString("yyyyMMdd_HHmmss_fff")))
+                    : new DirectoryInfo(currentDirectoryPath);
+
             var pngInfoDir = Path.Combine(CurrentDirectory.FullName, "png-info-images");
             var imagesDir = Path.Combine(CurrentDirectory.FullName, "target-images");
 
             Directory.CreateDirectory(CurrentDirectory.FullName);
-            PngInfoFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(pngInfoDir).FullName;
-            ImageToImageTargetFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(imagesDir).FullName;
+            PngInfoFileListViewModel.CurrentDirectoryPath = Directory.Exists(pngInfoDir)
+                ? pngInfoDir
+                : Directory.CreateDirectory(pngInfoDir).FullName;
+
+            ImageToImageTargetFileListViewModel.CurrentDirectoryPath = Directory.Exists(imagesDir)
+                ? imagesDir
+                : Directory.CreateDirectory(imagesDir).FullName;
         }
 
         [Conditional("DEBUG")]
