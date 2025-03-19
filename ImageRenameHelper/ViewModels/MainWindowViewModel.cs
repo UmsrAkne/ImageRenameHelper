@@ -23,19 +23,7 @@ namespace ImageRenameHelper.ViewModels
             PngInfoFileListViewModel = new FileListViewModel();
             ImageToImageTargetFileListViewModel = new FileListViewModel();
 
-            var workingDir = new DirectoryInfo("working-directories");
-            if (!workingDir.Exists)
-            {
-                Directory.CreateDirectory(workingDir.FullName);
-            }
-
-            CurrentDirectory = new DirectoryInfo(Path.Combine(workingDir.FullName, DateTime.Now.ToString("yyyyMMdd_HHmmss_fff")));
-            var pngInfoDir = Path.Combine(CurrentDirectory.FullName, "png-info-images");
-            var imagesDir = Path.Combine(CurrentDirectory.FullName, "target-images");
-
-            Directory.CreateDirectory(CurrentDirectory.FullName);
-            PngInfoFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(pngInfoDir).FullName;
-            ImageToImageTargetFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(imagesDir).FullName;
+            SetupWorkingDirectories();
 
             // SetDummies();
         }
@@ -95,6 +83,27 @@ namespace ImageRenameHelper.ViewModels
         {
             EnabledCursorPositionSyncMode = !EnabledCursorPositionSyncMode;
         });
+
+        /// <summary>
+        /// 作業ディレクトリを作成し、`PngInfoFileListViewModel` と `ImageToImageTargetFileListViewModel` の CurrentDirectoryPath にセットします。<br/>
+        /// 作業ディレクトリのベースディレクトリは日時からネーミングされます。
+        /// </summary>
+        private void SetupWorkingDirectories()
+        {
+            var workingDir = new DirectoryInfo("working-directories");
+            if (!workingDir.Exists)
+            {
+                Directory.CreateDirectory(workingDir.FullName);
+            }
+
+            CurrentDirectory = new DirectoryInfo(Path.Combine(workingDir.FullName, DateTime.Now.ToString("yyyyMMdd_HHmmss_fff")));
+            var pngInfoDir = Path.Combine(CurrentDirectory.FullName, "png-info-images");
+            var imagesDir = Path.Combine(CurrentDirectory.FullName, "target-images");
+
+            Directory.CreateDirectory(CurrentDirectory.FullName);
+            PngInfoFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(pngInfoDir).FullName;
+            ImageToImageTargetFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(imagesDir).FullName;
+        }
 
         [Conditional("DEBUG")]
         private void SetDummies()
