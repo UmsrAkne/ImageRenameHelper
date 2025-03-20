@@ -6,14 +6,18 @@ using System.IO;
 using System.Linq;
 using ImageRenameHelper.Models;
 using ImageRenameHelper.Utils;
+using ImageRenameHelper.Views;
 using Prism.Commands;
+using Prism.Ioc;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
 
 namespace ImageRenameHelper.ViewModels
 {
     // ReSharper disable once ClassNeverInstantiated.Global
     public class MainWindowViewModel : BindableBase
     {
+        private readonly IDialogService dialogService;
         private string message;
         private int selectedIndex;
         private bool enabledCursorPositionSyncMode;
@@ -23,21 +27,19 @@ namespace ImageRenameHelper.ViewModels
             PngInfoFileListViewModel = new FileListViewModel();
             ImageToImageTargetFileListViewModel = new FileListViewModel();
 
-            var workingDir = new DirectoryInfo("working-directories");
-            if (!workingDir.Exists)
-            {
-                Directory.CreateDirectory(workingDir.FullName);
-            }
-
-            CurrentDirectory = new DirectoryInfo(Path.Combine(workingDir.FullName, DateTime.Now.ToString("yyyyMMdd_HHmmss_fff")));
-            var pngInfoDir = Path.Combine(CurrentDirectory.FullName, "png-info-images");
-            var imagesDir = Path.Combine(CurrentDirectory.FullName, "target-images");
-
-            Directory.CreateDirectory(CurrentDirectory.FullName);
-            PngInfoFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(pngInfoDir).FullName;
-            ImageToImageTargetFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(imagesDir).FullName;
+            SetupWorkingDirectories();
 
             // SetDummies();
+        }
+
+        public MainWindowViewModel(IContainerProvider containerProvider)
+        {
+            dialogService = containerProvider.Resolve<IDialogService>();
+
+            PngInfoFileListViewModel = new FileListViewModel();
+            ImageToImageTargetFileListViewModel = new FileListViewModel();
+
+            SetupWorkingDirectories();
         }
 
         /// <summary>
@@ -95,6 +97,55 @@ namespace ImageRenameHelper.ViewModels
         {
             EnabledCursorPositionSyncMode = !EnabledCursorPositionSyncMode;
         });
+
+        public DelegateCommand ShowWorkingDirectoryChangePageCommand => new DelegateCommand(() =>
+        {
+            dialogService.ShowDialog(nameof(WorkingDirectoryChangePage), new DialogParameters(), result =>
+            {
+                if (result.Result == ButtonResult.OK)
+                {
+                    SetupWorkingDirectories(
+                        result.Parameters.GetValue<string>(
+                            nameof(WorkingDirectoryChangePageViewModel.WorkingDirectoryName)));
+                }
+            });
+        });
+
+        /// <summary>
+        /// 作業ディレクトリを作成し、`PngInfoFileListViewModel` と `ImageToImageTargetFileListViewModel` の CurrentDirectoryPath にセットします。<br/>
+        /// 作業ディレクトリのベースディレクトリは日時からネーミングされます。
+        /// </summary>
+        /// <param name="currentDirectoryName">作業ディレクトリのフルパスを指定します。無指定の場合、作業ディレクトリの名前は自動決定・作成されます。</param>
+        private void SetupWorkingDirectories(string currentDirectoryName = "")
+        {
+            var workingDir = new DirectoryInfo("working-directories");
+            if (!workingDir.Exists)
+            {
+                Directory.CreateDirectory(workingDir.FullName);
+            }
+
+            var dirName = string.IsNullOrEmpty(currentDirectoryName)
+                ? DateTime.Now.ToString("yyyyMMdd_HHmmss_fff")
+                : currentDirectoryName;
+
+            CurrentDirectory = new DirectoryInfo(Path.Combine(workingDir.FullName, dirName));
+
+            var pngInfoDir = Path.Combine(CurrentDirectory.FullName, "png-info-images");
+            var imagesDir = Path.Combine(CurrentDirectory.FullName, "target-images");
+
+            Directory.CreateDirectory(CurrentDirectory.FullName);
+            PngInfoFileListViewModel.CurrentDirectoryPath = Directory.Exists(pngInfoDir)
+                ? pngInfoDir
+                : Directory.CreateDirectory(pngInfoDir).FullName;
+
+            PngInfoFileListViewModel.LoadFiles();
+
+            ImageToImageTargetFileListViewModel.CurrentDirectoryPath = Directory.Exists(imagesDir)
+                ? imagesDir
+                : Directory.CreateDirectory(imagesDir).FullName;
+
+            ImageToImageTargetFileListViewModel.LoadFiles();
+        }
 
         [Conditional("DEBUG")]
         private void SetDummies()

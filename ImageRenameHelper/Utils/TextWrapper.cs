@@ -30,9 +30,9 @@ namespace ImageRenameHelper.Utils
         private void SetVersion()
         {
             const int major = 1;
-            const int minor = 2;
+            const int minor = 3;
             const int patch = 0;
-            const string date = "20250319";
+            const string date = "20250320";
             const string suffixId = "a";
 
             Version = $"{major}.{minor}.{patch} ({date}{suffixId})";
