@@ -55,8 +55,15 @@
                     BorderBrush="DimGray"
                     BorderThickness="0.5">
                     <StackPanel>
-                        <TextBlock Text="{Binding CurrentDirectoryPath}" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Seed :" />
+                            <TextBox
+                                MinWidth="200"
+                                Margin="3,0"
+                                Text="{Binding SelectedItem.Seed}" />
+                        </StackPanel>
 
+                        <TextBlock Text="{Binding CurrentDirectoryPath}" />
                         <StackPanel Orientation="Horizontal">
                             <Button
                                 Margin="0,2"
