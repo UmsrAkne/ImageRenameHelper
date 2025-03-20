@@ -147,31 +147,60 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <Border Grid.Row="0" Grid.Column="0">
-            <ContentControl
-                AllowDrop="True"
-                Content="{Binding}"
-                ContentTemplate="{StaticResource FileListTemplate}"
-                DataContext="{Binding PngInfoFileListViewModel}">
-                <i:Interaction.Behaviors>
-                    <behaviors:FileDropBehavior />
-                </i:Interaction.Behaviors>
+        <TabControl
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2">
+            <TabItem Header="Working Directories">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
 
-            </ContentControl>
-        </Border>
+                    <Border Grid.Column="0">
+                        <ContentControl
+                            AllowDrop="True"
+                            Content="{Binding}"
+                            ContentTemplate="{StaticResource FileListTemplate}"
+                            DataContext="{Binding PngInfoFileListViewModel}">
+                            <i:Interaction.Behaviors>
+                                <behaviors:FileDropBehavior />
+                            </i:Interaction.Behaviors>
 
-        <Border Grid.Row="0" Grid.Column="1">
-            <ContentControl
-                AllowDrop="True"
-                Content="{Binding}"
-                ContentTemplate="{StaticResource FileListTemplate}"
-                DataContext="{Binding ImageToImageTargetFileListViewModel}">
-                <i:Interaction.Behaviors>
-                    <behaviors:FileDropBehavior />
-                </i:Interaction.Behaviors>
+                        </ContentControl>
+                    </Border>
 
-            </ContentControl>
-        </Border>
+                    <Border Grid.Column="1">
+                        <ContentControl
+                            AllowDrop="True"
+                            Content="{Binding}"
+                            ContentTemplate="{StaticResource FileListTemplate}"
+                            DataContext="{Binding ImageToImageTargetFileListViewModel}">
+                            <i:Interaction.Behaviors>
+                                <behaviors:FileDropBehavior />
+                            </i:Interaction.Behaviors>
+
+                        </ContentControl>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Temporary Directory">
+                <Border>
+                    <ContentControl
+                        AllowDrop="True"
+                        Content="{Binding}"
+                        ContentTemplate="{StaticResource FileListTemplate}"
+                        DataContext="{Binding TemporaryFileListViewModel}">
+                        <i:Interaction.Behaviors>
+                            <behaviors:FileDropBehavior />
+                        </i:Interaction.Behaviors>
+
+                    </ContentControl>
+                </Border>
+            </TabItem>
+
+        </TabControl>
 
         <StackPanel
             Grid.Row="1"
