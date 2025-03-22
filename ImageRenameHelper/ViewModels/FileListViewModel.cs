@@ -147,6 +147,14 @@ namespace ImageRenameHelper.ViewModels
             ReOrder();
         });
 
+        public DelegateCommand CopySeedCommand => new DelegateCommand(() =>
+        {
+            if (SelectedItem != null)
+            {
+                Clipboard.SetText(SelectedItem.Seed);
+            }
+        });
+
         /// <summary>
         /// 入力されたパスにあるファイルのリストを `Files` にロードします。
         /// </summary>

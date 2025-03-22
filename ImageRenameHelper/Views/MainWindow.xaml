@@ -57,7 +57,7 @@
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Seed :" />
-                            <TextBox
+                            <TextBlock
                                 MinWidth="200"
                                 Margin="3,0"
                                 Text="{Binding SelectedItem.Seed}" />
@@ -70,6 +70,12 @@
                                 Padding="10,1"
                                 Command="{Binding CopyWorkingDirectoryPathCommand}"
                                 Content="Copy Folder Path" />
+
+                            <Button
+                                Margin="10,2"
+                                Padding="10,1"
+                                Command="{Binding CopySeedCommand}"
+                                Content="Copy Seed" />
                         </StackPanel>
                     </StackPanel>
                 </Border>
