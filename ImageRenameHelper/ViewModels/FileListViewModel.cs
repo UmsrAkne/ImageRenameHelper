@@ -141,6 +141,20 @@ namespace ImageRenameHelper.ViewModels
             Clipboard.SetText(CurrentDirectoryPath);
         });
 
+        public DelegateCommand ReverseOrderCommand => new DelegateCommand(() =>
+        {
+            Files = new ObservableCollection<FileListItem>(Files.Reverse());
+            ReOrder();
+        });
+
+        public DelegateCommand CopySeedCommand => new DelegateCommand(() =>
+        {
+            if (SelectedItem != null)
+            {
+                Clipboard.SetText(SelectedItem.Seed);
+            }
+        });
+
         /// <summary>
         /// 入力されたパスにあるファイルのリストを `Files` にロードします。
         /// </summary>

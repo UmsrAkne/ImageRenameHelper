@@ -11,8 +11,8 @@
     xmlns:viewModels="clr-namespace:ImageRenameHelper.ViewModels"
     xmlns:views="clr-namespace:ImageRenameHelper.Views"
     Title="{Binding TextWrapper.Title}"
-    Width="800"
-    Height="600"
+    Width="880"
+    Height="720"
     d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
@@ -36,6 +36,7 @@
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
@@ -54,14 +55,27 @@
                     BorderBrush="DimGray"
                     BorderThickness="0.5">
                     <StackPanel>
-                        <TextBlock Text="{Binding CurrentDirectoryPath}" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Seed :" />
+                            <TextBlock
+                                MinWidth="200"
+                                Margin="3,0"
+                                Text="{Binding SelectedItem.Seed}" />
+                        </StackPanel>
 
+                        <TextBlock Text="{Binding CurrentDirectoryPath}" />
                         <StackPanel Orientation="Horizontal">
                             <Button
                                 Margin="0,2"
                                 Padding="10,1"
                                 Command="{Binding CopyWorkingDirectoryPathCommand}"
                                 Content="Copy Folder Path" />
+
+                            <Button
+                                Margin="10,2"
+                                Padding="10,1"
+                                Command="{Binding CopySeedCommand}"
+                                Content="Copy Seed" />
                         </StackPanel>
                     </StackPanel>
                 </Border>
@@ -71,8 +85,18 @@
                     Height="200"
                     Source="{Binding PreviewImageSource}" />
 
+                <DockPanel Grid.Row="3">
+                    <Button
+                        Width="100"
+                        Margin="0,2"
+                        Padding="2"
+                        HorizontalAlignment="Left"
+                        Command="{Binding ReverseOrderCommand}"
+                        Content="Revers Order" />
+                </DockPanel>
+
                 <ListBox
-                    Grid.Row="3"
+                    Grid.Row="4"
                     BorderBrush="DimGray"
                     BorderThickness="1"
                     ItemsSource="{Binding Files}"
@@ -129,31 +153,60 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <Border Grid.Row="0" Grid.Column="0">
-            <ContentControl
-                AllowDrop="True"
-                Content="{Binding}"
-                ContentTemplate="{StaticResource FileListTemplate}"
-                DataContext="{Binding PngInfoFileListViewModel}">
-                <i:Interaction.Behaviors>
-                    <behaviors:FileDropBehavior />
-                </i:Interaction.Behaviors>
+        <TabControl
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2">
+            <TabItem Header="Working Directories">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
 
-            </ContentControl>
-        </Border>
+                    <Border Grid.Column="0">
+                        <ContentControl
+                            AllowDrop="True"
+                            Content="{Binding}"
+                            ContentTemplate="{StaticResource FileListTemplate}"
+                            DataContext="{Binding PngInfoFileListViewModel}">
+                            <i:Interaction.Behaviors>
+                                <behaviors:FileDropBehavior />
+                            </i:Interaction.Behaviors>
 
-        <Border Grid.Row="0" Grid.Column="1">
-            <ContentControl
-                AllowDrop="True"
-                Content="{Binding}"
-                ContentTemplate="{StaticResource FileListTemplate}"
-                DataContext="{Binding ImageToImageTargetFileListViewModel}">
-                <i:Interaction.Behaviors>
-                    <behaviors:FileDropBehavior />
-                </i:Interaction.Behaviors>
+                        </ContentControl>
+                    </Border>
 
-            </ContentControl>
-        </Border>
+                    <Border Grid.Column="1">
+                        <ContentControl
+                            AllowDrop="True"
+                            Content="{Binding}"
+                            ContentTemplate="{StaticResource FileListTemplate}"
+                            DataContext="{Binding ImageToImageTargetFileListViewModel}">
+                            <i:Interaction.Behaviors>
+                                <behaviors:FileDropBehavior />
+                            </i:Interaction.Behaviors>
+
+                        </ContentControl>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Temporary Directory">
+                <Border>
+                    <ContentControl
+                        AllowDrop="True"
+                        Content="{Binding}"
+                        ContentTemplate="{StaticResource FileListTemplate}"
+                        DataContext="{Binding TemporaryFileListViewModel}">
+                        <i:Interaction.Behaviors>
+                            <behaviors:FileDropBehavior />
+                        </i:Interaction.Behaviors>
+
+                    </ContentControl>
+                </Border>
+            </TabItem>
+
+        </TabControl>
 
         <StackPanel
             Grid.Row="1"

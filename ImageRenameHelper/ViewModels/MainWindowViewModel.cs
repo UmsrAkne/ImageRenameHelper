@@ -26,6 +26,7 @@ namespace ImageRenameHelper.ViewModels
         {
             PngInfoFileListViewModel = new FileListViewModel();
             ImageToImageTargetFileListViewModel = new FileListViewModel();
+            TemporaryFileListViewModel = new FileListViewModel();
 
             SetupWorkingDirectories();
 
@@ -38,13 +39,14 @@ namespace ImageRenameHelper.ViewModels
 
             PngInfoFileListViewModel = new FileListViewModel();
             ImageToImageTargetFileListViewModel = new FileListViewModel();
+            TemporaryFileListViewModel = new FileListViewModel();
 
             SetupWorkingDirectories();
         }
 
         /// <summary>
         /// このアプリが作業中に取り扱う作業ディレクトリです。<br/>
-        /// PngInfo　のファイルと、 ImageToImage の対象ファイルを入れるディレクトリの２つを格納します。
+        /// PngInfo　のファイルと、 ImageToImage の対象ファイルを入れるディレクトリ、一時的なファイル置き場の３つを格納します。
         /// </summary>
         public DirectoryInfo CurrentDirectory { get; set; }
 
@@ -55,6 +57,8 @@ namespace ImageRenameHelper.ViewModels
         public FileListViewModel PngInfoFileListViewModel { get; }
 
         public FileListViewModel ImageToImageTargetFileListViewModel { get; }
+
+        public FileListViewModel TemporaryFileListViewModel { get; }
 
         public bool EnabledCursorPositionSyncMode
         {
@@ -132,6 +136,7 @@ namespace ImageRenameHelper.ViewModels
 
             var pngInfoDir = Path.Combine(CurrentDirectory.FullName, "png-info-images");
             var imagesDir = Path.Combine(CurrentDirectory.FullName, "target-images");
+            var temporaryDir = Path.Combine(CurrentDirectory.FullName, "temporary");
 
             Directory.CreateDirectory(CurrentDirectory.FullName);
             PngInfoFileListViewModel.CurrentDirectoryPath = Directory.Exists(pngInfoDir)
@@ -145,6 +150,8 @@ namespace ImageRenameHelper.ViewModels
                 : Directory.CreateDirectory(imagesDir).FullName;
 
             ImageToImageTargetFileListViewModel.LoadFiles();
+
+            TemporaryFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(temporaryDir).FullName;
         }
 
         [Conditional("DEBUG")]

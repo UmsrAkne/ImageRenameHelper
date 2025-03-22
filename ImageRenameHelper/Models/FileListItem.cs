@@ -1,4 +1,5 @@
 using System.IO;
+using System.Text.RegularExpressions;
 using MetadataExtractor;
 using MetadataExtractor.Formats.Png;
 using Prism.Mvvm;
@@ -12,6 +13,7 @@ namespace ImageRenameHelper.Models
         private int lineNumber;
         private int order;
         private string metaDataText = string.Empty;
+        private string seed = string.Empty;
 
         public FileListItem(FileInfo fi)
         {
@@ -33,6 +35,8 @@ namespace ImageRenameHelper.Models
         public int Order { get => order; set => SetProperty(ref order, value); }
 
         public string MetaDataText { get => metaDataText; set => SetProperty(ref metaDataText, value); }
+
+        public string Seed { get => seed; set => SetProperty(ref seed, value); }
 
         public void LoadMetaData()
         {
@@ -63,6 +67,15 @@ namespace ImageRenameHelper.Models
             {
                 MetaDataText = noMetadataMessage;
             }
+
+            Seed = ExtractSeedValue(MetaDataText);
+        }
+
+        private string ExtractSeedValue(string text)
+        {
+            var match = Regex.Match(text, @"Seed:\s*(\d+),");
+
+            return match.Success ? match.Groups[1].Value : string.Empty;
         }
     }
 }
