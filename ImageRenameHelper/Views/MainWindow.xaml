@@ -11,8 +11,8 @@
     xmlns:viewModels="clr-namespace:ImageRenameHelper.ViewModels"
     xmlns:views="clr-namespace:ImageRenameHelper.Views"
     Title="{Binding TextWrapper.Title}"
-    Width="800"
-    Height="600"
+    Width="880"
+    Height="720"
     d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
