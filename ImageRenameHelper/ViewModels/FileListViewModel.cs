@@ -129,11 +129,20 @@ namespace ImageRenameHelper.ViewModels
             }
 
             var item = SelectedItem;
+            var oldIndex = Files.IndexOf(item);
             item.FileInfo.Delete();
             Files.Remove(item);
             PreviewImageSource = null;
 
             ReOrder();
+            if (Files.Count == 0)
+            {
+                return;
+            }
+
+            // 予め記録しておいたカーソル位置を復元する。
+            SelectedIndex = Math.Min(oldIndex, Files.Count - 1);
+            SelectedItem = Files[SelectedIndex];
         });
 
         public DelegateCommand CopyWorkingDirectoryPathCommand => new (() =>
