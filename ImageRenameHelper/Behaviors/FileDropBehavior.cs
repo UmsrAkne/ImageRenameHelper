@@ -7,7 +7,7 @@ using Microsoft.Xaml.Behaviors;
 
 namespace ImageRenameHelper.Behaviors
 {
-    public class FileDropBehavior : Behavior<ContentControl>
+    public class FileDropBehavior : Behavior<UserControl>
     {
         protected override void OnAttached()
         {
