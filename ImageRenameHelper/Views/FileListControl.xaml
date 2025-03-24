@@ -69,6 +69,8 @@
         <Image
             Grid.Row="2"
             Height="200"
+            Margin="4,1"
+            HorizontalAlignment="{Binding ElementName=Root, Path=ImageAlignment}"
             Source="{Binding PreviewImageSource}" />
 
         <DockPanel Grid.Row="3">
