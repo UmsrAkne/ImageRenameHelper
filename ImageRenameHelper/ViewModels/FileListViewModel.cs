@@ -170,8 +170,6 @@ namespace ImageRenameHelper.ViewModels
         /// <param name="directoryPath">対象のディレクトリパスです。引数を入力しない場合は `CurrentDirectoryPath` が使われます。</param>
         public void LoadFiles(string directoryPath = null)
         {
-            var index = SelectedIndex;
-            
             if (string.IsNullOrWhiteSpace(directoryPath))
             {
                 directoryPath = CurrentDirectoryPath;
