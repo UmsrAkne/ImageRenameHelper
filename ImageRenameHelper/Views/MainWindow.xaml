@@ -3,11 +3,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="clr-namespace:ImageRenameHelper.Behaviors"
-    xmlns:converters="clr-namespace:ImageRenameHelper.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="clr-namespace:ImageRenameHelper.Models"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:viewModels="clr-namespace:ImageRenameHelper.ViewModels"
     xmlns:views="clr-namespace:ImageRenameHelper.Views"
@@ -29,120 +27,6 @@
             Command="{Binding ShowWorkingDirectoryChangePageCommand}"
             Modifiers="Control+Shift" />
     </Window.InputBindings>
-
-    <Window.Resources>
-        <converters:DirectoryPathConverter x:Key="DirectoryPathConverter" />
-        <DataTemplate x:Key="FileListTemplate" DataType="{x:Type viewModels:FileListViewModel}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-
-                <Border
-                    Grid.Row="0"
-                    BorderBrush="DimGray"
-                    BorderThickness="1">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <TextBlock Text="{Binding SelectedItem.MetaDataText}" TextWrapping="Wrap" />
-                    </ScrollViewer>
-                </Border>
-
-                <Border
-                    Grid.Row="1"
-                    Padding="4,1"
-                    BorderBrush="DimGray"
-                    BorderThickness="0.5">
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Seed :" />
-                            <TextBlock
-                                MinWidth="200"
-                                Margin="3,0"
-                                Text="{Binding SelectedItem.Seed}" />
-                        </StackPanel>
-
-                        <TextBlock Text="{Binding CurrentDirectoryPath, Converter={StaticResource DirectoryPathConverter}}" />
-                        <StackPanel Orientation="Horizontal">
-                            <Button
-                                Margin="0,2"
-                                Padding="10,1"
-                                Command="{Binding CopyWorkingDirectoryPathCommand}"
-                                Content="Copy Folder Path" />
-
-                            <Button
-                                Margin="10,2"
-                                Padding="10,1"
-                                Command="{Binding CopySeedCommand}"
-                                Content="Copy Seed" />
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-
-                <Image
-                    Grid.Row="2"
-                    Height="200"
-                    Source="{Binding PreviewImageSource}" />
-
-                <DockPanel Grid.Row="3">
-                    <Button
-                        Width="100"
-                        Margin="0,2"
-                        Padding="2"
-                        HorizontalAlignment="Left"
-                        Command="{Binding ReverseOrderCommand}"
-                        Content="Revers Order" />
-                </DockPanel>
-
-                <ListBox
-                    Grid.Row="4"
-                    BorderBrush="DimGray"
-                    BorderThickness="1"
-                    ItemsSource="{Binding Files}"
-                    SelectedIndex="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=views:MainWindow}, Path=DataContext.SelectedIndex}"
-                    SelectedItem="{Binding SelectedItem}">
-
-                    <ListBox.InputBindings>
-                        <KeyBinding
-                            Key="Up"
-                            Command="{Binding MoveUpCommand}"
-                            Modifiers="Alt" />
-
-                        <KeyBinding
-                            Key="Down"
-                            Command="{Binding MoveDownCommand}"
-                            Modifiers="Alt" />
-
-                        <KeyBinding
-                            Key="Delete"
-                            Command="{Binding DeleteFileCommand}"
-                            Modifiers="Control" />
-                    </ListBox.InputBindings>
-
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type models:FileListItem}">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock
-                                    Width="20"
-                                    Text="{Binding LineNumber}"
-                                    TextAlignment="Center" />
-
-                                <Border
-                                    Width="1"
-                                    Margin="3,0"
-                                    Background="Black" />
-                                <TextBlock Text="{Binding Name}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-
-            </Grid>
-        </DataTemplate>
-    </Window.Resources>
 
     <Grid Margin="4">
         <Grid.RowDefinitions>
@@ -167,44 +51,39 @@
                     </Grid.ColumnDefinitions>
 
                     <Border Grid.Column="0">
-                        <ContentControl
+                        <views:FileListControl
                             AllowDrop="True"
-                            Content="{Binding}"
-                            ContentTemplate="{StaticResource FileListTemplate}"
-                            DataContext="{Binding PngInfoFileListViewModel}">
+                            DataContext="{Binding PngInfoFileListViewModel}"
+                            ImageAlignment="Right">
                             <i:Interaction.Behaviors>
                                 <behaviors:FileDropBehavior />
                             </i:Interaction.Behaviors>
-
-                        </ContentControl>
+                        </views:FileListControl>
                     </Border>
 
                     <Border Grid.Column="1">
-                        <ContentControl
+                        <views:FileListControl
                             AllowDrop="True"
-                            Content="{Binding}"
-                            ContentTemplate="{StaticResource FileListTemplate}"
-                            DataContext="{Binding ImageToImageTargetFileListViewModel}">
+                            DataContext="{Binding ImageToImageTargetFileListViewModel}"
+                            ImageAlignment="Left">
                             <i:Interaction.Behaviors>
                                 <behaviors:FileDropBehavior />
                             </i:Interaction.Behaviors>
-
-                        </ContentControl>
+                        </views:FileListControl>
                     </Border>
                 </Grid>
             </TabItem>
+
             <TabItem Header="Temporary Directory">
                 <Border>
-                    <ContentControl
+                    <views:FileListControl
                         AllowDrop="True"
-                        Content="{Binding}"
-                        ContentTemplate="{StaticResource FileListTemplate}"
-                        DataContext="{Binding TemporaryFileListViewModel}">
+                        DataContext="{Binding TemporaryFileListViewModel}"
+                        ImageAlignment="Center">
                         <i:Interaction.Behaviors>
                             <behaviors:FileDropBehavior />
                         </i:Interaction.Behaviors>
-
-                    </ContentControl>
+                    </views:FileListControl>
                 </Border>
             </TabItem>
 
