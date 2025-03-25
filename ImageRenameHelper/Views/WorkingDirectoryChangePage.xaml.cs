@@ -1,8 +1,6 @@
-using System.Windows.Controls;
-
 namespace ImageRenameHelper.Views
 {
-    public partial class WorkingDirectoryChangePage : Page
+    public partial class WorkingDirectoryChangePage
     {
         public WorkingDirectoryChangePage()
         {

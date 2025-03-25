@@ -30,7 +30,7 @@ namespace ImageRenameHelper.ViewModels
 
             SetupWorkingDirectories();
 
-            // SetDummies();
+            SetDummies();
         }
 
         public MainWindowViewModel(IContainerProvider containerProvider)
