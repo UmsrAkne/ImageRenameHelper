@@ -30,8 +30,8 @@ namespace ImageRenameHelper.Utils
         private void SetVersion()
         {
             const int major = 1;
-            const int minor = 4;
-            const int patch = 1;
+            const int minor = 5;
+            const int patch = 0;
             const string date = "20250323";
             const string suffixId = "a";
 
