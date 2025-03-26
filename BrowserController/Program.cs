@@ -21,7 +21,7 @@ namespace BrowserController
             // i2i tab
             // ButtonClick(driver, "/html/body/gradio-app/div/div/div[1]/div/div/div[2]/div[1]/button[2]");
             ButtonClick(driver,
-                "#tabs > div.tab-nav.scroll-hide.svelte-kqij2n > button:nth-child(2)",
+                "#tabs > div > button:nth-child(2)",
                 "i2i タブをクリック");
 
             // Generation tab
