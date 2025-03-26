@@ -19,7 +19,10 @@ namespace BrowserController
             var driver = new ChromeDriver(options);
 
             // i2i tab
-            ButtonClick(driver, "/html/body/gradio-app/div/div/div[1]/div/div/div[2]/div[1]/button[2]");
+            // ButtonClick(driver, "/html/body/gradio-app/div/div/div[1]/div/div/div[2]/div[1]/button[2]");
+            ButtonClick(driver,
+                "#tabs > div.tab-nav.scroll-hide.svelte-kqij2n > button:nth-child(2)",
+                "i2i タブをクリック");
 
             // Generation tab
             ButtonClick(driver, "/html/body/gradio-app/div/div/div[1]/div/div/div[2]/div[3]/div/div[2]/div[1]/button[1]");
@@ -44,6 +47,7 @@ namespace BrowserController
             {
                 // PngInfo エリアの表示トグル
                 ButtonClick(driver, "/html/body/gradio-app/div/div/div[1]/div/div/div[2]/div[3]/div/div[2]/div[2]/div/div/div[1]/div[1]/div[8]/div/div[2]/div[2]");
+                Thread.Sleep(400);
             }
 
             // PNG Info directory
@@ -79,6 +83,15 @@ namespace BrowserController
         {
             var button = driver.FindElement(By.XPath(fullXPath));
             button.Click();
+
+            Thread.Sleep(200);
+        }
+
+        private static void ButtonClick(IWebDriver driver, string cssSelector, string consoleMessage)
+        {
+            var button = driver.FindElement(By.CssSelector(cssSelector));
+            button.Click();
+            Console.WriteLine(consoleMessage);
 
             Thread.Sleep(200);
         }
