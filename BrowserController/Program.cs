@@ -5,6 +5,8 @@ namespace BrowserController
 {
     public class Program
     {
+        private static string topPageI2iTabSelector = "#tabs > div > button:nth-child(2)";
+
         static void Main(string[] args)
         {
             // 既存のブラウザに接続
@@ -21,7 +23,7 @@ namespace BrowserController
             // i2i tab
             // ButtonClick(driver, "/html/body/gradio-app/div/div/div[1]/div/div/div[2]/div[1]/button[2]");
             ButtonClick(driver,
-                "#tabs > div > button:nth-child(2)",
+                topPageI2iTabSelector,
                 "i2i タブをクリック");
 
             // Generation tab
@@ -43,7 +45,7 @@ namespace BrowserController
             // 'transform'プロパティの値を取得
             var transformValue = iconElement.GetCssValue("transform");
 
-            if (transformValue.Contains("rotate(0deg)"))
+            if (!transformValue.Contains("rotate(0deg)"))
             {
                 // PngInfo エリアの表示トグル
                 ButtonClick(driver, "/html/body/gradio-app/div/div/div[1]/div/div/div[2]/div[3]/div/div[2]/div[2]/div/div/div[1]/div[1]/div[8]/div/div[2]/div[2]");
