@@ -118,7 +118,17 @@ namespace ImageRenameHelper.ViewModels
 
         public DelegateCommand BrowserControlCommand => new DelegateCommand(() =>
         {
-            I2IController.SetupBatchFromDirectory("p1", "p2");
+            var pvm = PngInfoFileListViewModel;
+            var ivm = ImageToImageTargetFileListViewModel;
+
+            if (pvm.Files.Count != ivm.Files.Count || pvm.Files.Count + ivm.Files.Count == 0)
+            {
+                Message = "このコマンドを実行するには、２つの作業ディレクトリにファイルが一つ以上存在し、更に同数である必要があります。";
+                return;
+            }
+
+            I2IController.SetupBatchFromDirectory(
+                pvm.CurrentDirectoryPath, ivm.CurrentDirectoryPath);
         });
 
         /// <summary>

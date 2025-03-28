@@ -121,6 +121,12 @@
                     Command="{Binding SyncFileNamesCommand}"
                     Content="Sync FileName" />
 
+                <Button
+                    Margin="10"
+                    Padding="20,2"
+                    Command="{Binding BrowserControlCommand}"
+                    Content="Setup i2i Batch Process" />
+
             </StackPanel>
 
             <Border Padding="2" Background="LightBlue">
