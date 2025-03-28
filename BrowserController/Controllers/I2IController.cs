@@ -11,16 +11,13 @@ namespace BrowserController.Controllers
         private static string i2IGenerationBatchFromDirTabSelector = "#img2img_batch_source > div.tab-nav.scroll-hide > button:nth-of-type(2)";
         private static string pngInfoAreaToggleButtonSelector = "#component-894 > div.label-wrap > span:nth-child(1)";
 
-        public static void SetupBatchFromDirectory()
+        public static void SetupBatchFromDirectory(string pngInfoDirectoryPath, string targetDirectoryPath)
         {
             // 既存のブラウザに接続
             var options = new ChromeOptions
             {
                 DebuggerAddress = "localhost:9222", // デバッグモードに接続
             };
-
-            var targetDirectory = "targetDir";
-            var pngInfoDirectory = "pngInfoDir";
 
             var driver = new ChromeDriver(options);
 
@@ -53,7 +50,7 @@ namespace BrowserController.Controllers
 
             InputTextArea(driver,
                 "#img2img_batch_input_dir > label > textarea",
-                targetDirectory,
+                targetDirectoryPath,
                 "Input Directory テキストボックスに書き込み"
             );
 
@@ -75,7 +72,7 @@ namespace BrowserController.Controllers
             // PNG Info directory
             InputTextArea(driver,
                 "#img2img_batch_png_info_dir > label > textarea",
-                pngInfoDirectory,
+                pngInfoDirectoryPath,
                 "png info ディレクトリのパスを入力");
 
             // Append Png info to prompts

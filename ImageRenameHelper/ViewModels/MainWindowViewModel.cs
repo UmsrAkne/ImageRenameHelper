@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using BrowserController.Controllers;
 using ImageRenameHelper.Models;
 using ImageRenameHelper.Utils;
 using ImageRenameHelper.Views;
@@ -113,6 +114,11 @@ namespace ImageRenameHelper.ViewModels
                             nameof(WorkingDirectoryChangePageViewModel.WorkingDirectoryName)));
                 }
             });
+        });
+
+        public DelegateCommand BrowserControlCommand => new DelegateCommand(() =>
+        {
+            I2IController.SetupBatchFromDirectory("p1", "p2");
         });
 
         /// <summary>

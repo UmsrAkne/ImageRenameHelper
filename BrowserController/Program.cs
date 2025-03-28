@@ -6,7 +6,7 @@ namespace BrowserController
     {
         static void Main(string[] args)
         {
-            I2IController.SetupBatchFromDirectory();
+            I2IController.SetupBatchFromDirectory("p1", "p2");
         }
     }
 }
