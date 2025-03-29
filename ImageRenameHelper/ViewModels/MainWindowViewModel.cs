@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using BrowserController.Controllers;
 using ImageRenameHelper.Models;
 using ImageRenameHelper.Utils;
 using ImageRenameHelper.Views;
@@ -113,6 +114,21 @@ namespace ImageRenameHelper.ViewModels
                             nameof(WorkingDirectoryChangePageViewModel.WorkingDirectoryName)));
                 }
             });
+        });
+
+        public DelegateCommand BrowserControlCommand => new DelegateCommand(() =>
+        {
+            var pvm = PngInfoFileListViewModel;
+            var ivm = ImageToImageTargetFileListViewModel;
+
+            if (pvm.Files.Count != ivm.Files.Count || pvm.Files.Count + ivm.Files.Count == 0)
+            {
+                Message = "このコマンドを実行するには、２つの作業ディレクトリにファイルが一つ以上存在し、更に同数である必要があります。";
+                return;
+            }
+
+            I2IController.SetupBatchFromDirectory(
+                pvm.CurrentDirectoryPath, ivm.CurrentDirectoryPath);
         });
 
         /// <summary>
