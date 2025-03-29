@@ -5,11 +5,14 @@ namespace BrowserController.Controllers
 {
     public static class I2IController
     {
-        private static string topPageI2ITabSelector = "#tabs > div > button:nth-child(2)";
-        private static string i2IGenerationTabSelector = "#img2img_extra_tabs > div > button";
-        private static string i2IGenerationBatchTabSelector = "#mode_img2img > div.tab-nav.scroll-hide > button:nth-of-type(6)";
-        private static string i2IGenerationBatchFromDirTabSelector = "#img2img_batch_source > div.tab-nav.scroll-hide > button:nth-of-type(2)";
-        private static string pngInfoAreaToggleButtonSelector = "#component-894 > div.label-wrap > span:nth-child(1)";
+        private readonly static string TopPageI2ITabSelector = "#tabs > div > button:nth-child(2)";
+        private readonly static string I2IGenerationTabSelector = "#img2img_extra_tabs > div > button";
+        private readonly static string I2IGenerationBatchTabSelector = "#mode_img2img > div.tab-nav.scroll-hide > button:nth-of-type(6)";
+        private readonly static string I2IGenerationBatchFromDirTabSelector = "#img2img_batch_source > div.tab-nav.scroll-hide > button:nth-of-type(2)";
+        private readonly static string PngInfoAreaToggleButtonSelector = "#component-894 > div.label-wrap > span:nth-child(1)";
+
+        private readonly static string I2IPromptArea = "#img2img_prompt > label > textarea";
+        private readonly static string I2INegativePromptArea = "#img2img_neg_prompt > label > textarea";
 
         public static void SetupBatchFromDirectory(string pngInfoDirectoryPath, string targetDirectoryPath)
         {
@@ -23,30 +26,30 @@ namespace BrowserController.Controllers
 
             // i2i tab
             ButtonClick(driver,
-                topPageI2ITabSelector,
+                TopPageI2ITabSelector,
                 "i2i タブをクリック");
 
 
             InputTextArea(driver,
-                "#img2img_prompt > label > textarea",
+                I2IPromptArea,
                 string.Empty,
                 "Prompt　エリアをリセット"
             );
 
             InputTextArea(driver,
-                "#img2img_neg_prompt > label > textarea",
+                I2INegativePromptArea,
                 string.Empty,
                 "Negative Prompt　エリアをリセット"
             );
 
             // Generation tab
-            ButtonClick(driver, i2IGenerationTabSelector, "i2i.Generation タブをクリック");
+            ButtonClick(driver, I2IGenerationTabSelector, "i2i.Generation タブをクリック");
 
             // Batch tab
-            ButtonClick(driver, i2IGenerationBatchTabSelector, "i2i.Generation.Batch タブをクリック");
+            ButtonClick(driver, I2IGenerationBatchTabSelector, "i2i.Generation.Batch タブをクリック");
 
             // From Directory tab
-            ButtonClick(driver, i2IGenerationBatchFromDirTabSelector, "i2i.Generation.Batch.FromDirectory タブをクリック");
+            ButtonClick(driver, I2IGenerationBatchFromDirTabSelector, "i2i.Generation.Batch.FromDirectory タブをクリック");
 
             InputTextArea(driver,
                 "#img2img_batch_input_dir > label > textarea",
@@ -55,7 +58,7 @@ namespace BrowserController.Controllers
             );
 
             // 'icon'クラスを持つspan要素を取得
-            var iconElement = driver.FindElement(By.CssSelector("#component-894 > div.label-wrap.svelte-s1r2yt > span.icon.svelte-s1r2yt"));
+            var iconElement = driver.FindElement(By.CssSelector("#component-894 > div.label-wrap > span.icon"));
 
             // 'transform'プロパティの値を取得
             var transformValue = iconElement.GetCssValue("transform");
@@ -63,7 +66,7 @@ namespace BrowserController.Controllers
             if (!transformValue.Contains("matrix(1, 0, 0, 1, 0, 0)"))
             {
                 // PngInfo エリアの表示トグル
-                ButtonClick(driver, pngInfoAreaToggleButtonSelector, "png 表示エリアのトグルボタンをクリック");
+                ButtonClick(driver, PngInfoAreaToggleButtonSelector, "png 表示エリアのトグルボタンをクリック");
                 Thread.Sleep(400);
             }
 
