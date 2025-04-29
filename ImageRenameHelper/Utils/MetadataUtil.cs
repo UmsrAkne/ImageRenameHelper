@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Text.Json;
 using ImageRenameHelper.Models;
 using MetadataExtractor;
 
@@ -46,6 +48,20 @@ namespace ImageRenameHelper.Utils
             }
 
             return result;
+        }
+
+        public static void SavePromptToJsonFile(Prompt prompt, string filePath)
+        {
+            var options = new JsonSerializerOptions { WriteIndented = true, };
+            var json = JsonSerializer.Serialize(prompt, options);
+            File.WriteAllText(filePath, json);
+        }
+
+        public static Prompt LoadPromptFromJsonFile(string filePath)
+        {
+            var json = File.ReadAllText(filePath);
+            var prompt = JsonSerializer.Deserialize<Prompt>(json);
+            return prompt ?? new Prompt();
         }
     }
 }
