@@ -28,6 +28,8 @@ namespace ImageRenameHelper.ViewModels
             PngInfoFileListViewModel = new FileListViewModel();
             ImageToImageTargetFileListViewModel = new FileListViewModel();
             TemporaryFileListViewModel = new FileListViewModel();
+            MetadataSourceListViewModel = new FileListViewModel();
+            MetadataTextListViewModel = new FileListViewModel();
 
             SetupWorkingDirectories();
 
@@ -41,6 +43,8 @@ namespace ImageRenameHelper.ViewModels
             PngInfoFileListViewModel = new FileListViewModel();
             ImageToImageTargetFileListViewModel = new FileListViewModel();
             TemporaryFileListViewModel = new FileListViewModel();
+            MetadataSourceListViewModel = new FileListViewModel();
+            MetadataTextListViewModel = new FileListViewModel();
 
             SetupWorkingDirectories();
         }
@@ -58,6 +62,10 @@ namespace ImageRenameHelper.ViewModels
         public FileListViewModel PngInfoFileListViewModel { get; }
 
         public FileListViewModel ImageToImageTargetFileListViewModel { get; }
+
+        public FileListViewModel MetadataSourceListViewModel { get; }
+
+        public FileListViewModel MetadataTextListViewModel { get; }
 
         public FileListViewModel TemporaryFileListViewModel { get; }
 
@@ -152,6 +160,8 @@ namespace ImageRenameHelper.ViewModels
 
             var pngInfoDir = Path.Combine(CurrentDirectory.FullName, "png-info-images");
             var imagesDir = Path.Combine(CurrentDirectory.FullName, "target-images");
+            var metaDataSourceDir = Path.Combine(CurrentDirectory.FullName, "metadata-sources");
+            var metaDataDir = Path.Combine(CurrentDirectory.FullName, "metadata");
             var temporaryDir = Path.Combine(CurrentDirectory.FullName, "temporary");
 
             Directory.CreateDirectory(CurrentDirectory.FullName);
@@ -166,6 +176,10 @@ namespace ImageRenameHelper.ViewModels
                 : Directory.CreateDirectory(imagesDir).FullName;
 
             ImageToImageTargetFileListViewModel.LoadFiles();
+
+            MetadataSourceListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(metaDataSourceDir).FullName;
+
+            MetadataTextListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(metaDataDir).FullName;
 
             TemporaryFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(temporaryDir).FullName;
         }
