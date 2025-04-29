@@ -50,7 +50,12 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <Border Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Grid.Column="0">
                         <views:FileListControl
                             AllowDrop="True"
                             DataContext="{Binding PngInfoFileListViewModel}"
@@ -61,7 +66,7 @@
                         </views:FileListControl>
                     </Border>
 
-                    <Border Grid.Column="1">
+                    <Border Grid.Row="0" Grid.Column="1">
                         <views:FileListControl
                             AllowDrop="True"
                             DataContext="{Binding ImageToImageTargetFileListViewModel}"
@@ -71,6 +76,47 @@
                             </i:Interaction.Behaviors>
                         </views:FileListControl>
                     </Border>
+
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+
+                        <ToggleButton
+                            Margin="30,10"
+                            Padding="20,2"
+                            IsChecked="{Binding EnabledCursorPositionSyncMode}">
+                            <ToggleButton.Style>
+                                <Style TargetType="ToggleButton">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsChecked" Value="True">
+                                            <Setter Property="Background" Value="LightBlue" />
+                                            <Setter Property="Content" Value="Cursor Sync: ON" />
+                                        </Trigger>
+                                        <Trigger Property="IsChecked" Value="False">
+                                            <Setter Property="Background" Value="FloralWhite" />
+                                            <Setter Property="Content" Value="Cursor Sync: OFF" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ToggleButton.Style>
+                        </ToggleButton>
+
+                        <Button
+                            Margin="10"
+                            Padding="20,2"
+                            Command="{Binding SyncFileNamesCommand}"
+                            Content="Sync FileName" />
+
+                        <Button
+                            Margin="10"
+                            Padding="20,2"
+                            Command="{Binding BrowserControlCommand}"
+                            Content="Setup i2i Batch Process" />
+
+                    </StackPanel>
                 </Grid>
             </TabItem>
 
@@ -93,41 +139,6 @@
             Grid.Row="1"
             Grid.Column="0"
             Grid.ColumnSpan="2">
-            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-
-                <ToggleButton
-                    Margin="30,10"
-                    Padding="20,2"
-                    IsChecked="{Binding EnabledCursorPositionSyncMode}">
-                    <ToggleButton.Style>
-                        <Style TargetType="ToggleButton">
-                            <Style.Triggers>
-                                <Trigger Property="IsChecked" Value="True">
-                                    <Setter Property="Background" Value="LightBlue" />
-                                    <Setter Property="Content" Value="Cursor Sync: ON" />
-                                </Trigger>
-                                <Trigger Property="IsChecked" Value="False">
-                                    <Setter Property="Background" Value="FloralWhite" />
-                                    <Setter Property="Content" Value="Cursor Sync: OFF" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ToggleButton.Style>
-                </ToggleButton>
-
-                <Button
-                    Margin="10"
-                    Padding="20,2"
-                    Command="{Binding SyncFileNamesCommand}"
-                    Content="Sync FileName" />
-
-                <Button
-                    Margin="10"
-                    Padding="20,2"
-                    Command="{Binding BrowserControlCommand}"
-                    Content="Setup i2i Batch Process" />
-
-            </StackPanel>
 
             <Border Padding="2" Background="LightBlue">
                 <TextBlock Text="{Binding Message}" />
