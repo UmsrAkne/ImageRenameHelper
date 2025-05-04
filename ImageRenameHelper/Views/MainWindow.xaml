@@ -120,6 +120,55 @@
                 </Grid>
             </TabItem>
 
+            <TabItem Header="Image To Json">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Grid.Column="0">
+                        <views:FileListControl
+                            AllowDrop="True"
+                            DataContext="{Binding MetadataSourceListViewModel}"
+                            ImageAlignment="Center">
+                            <i:Interaction.Behaviors>
+                                <behaviors:FileDropBehavior />
+                            </i:Interaction.Behaviors>
+                        </views:FileListControl>
+                    </Border>
+
+                    <Border Grid.Row="0" Grid.Column="1">
+                        <views:FileListControl
+                            AllowDrop="True"
+                            DataContext="{Binding MetadataTextListViewModel}"
+                            ImageAlignment="Center">
+                            <i:Interaction.Behaviors>
+                                <behaviors:FileDropBehavior />
+                            </i:Interaction.Behaviors>
+                        </views:FileListControl>
+                    </Border>
+
+                    <Border
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2">
+                        <Button
+                            Width="Auto"
+                            Margin="10"
+                            Padding="10,2"
+                            HorizontalAlignment="Right"
+                            Command="{Binding GenerateMetaDataTextsCommand}"
+                            Content="Generate metadata texts" />
+                    </Border>
+                </Grid>
+            </TabItem>
+
             <TabItem Header="Temporary Directory">
                 <Border>
                     <views:FileListControl
