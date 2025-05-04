@@ -127,7 +127,12 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <Border Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Grid.Column="0">
                         <views:FileListControl
                             AllowDrop="True"
                             DataContext="{Binding MetadataSourceListViewModel}"
@@ -138,7 +143,7 @@
                         </views:FileListControl>
                     </Border>
 
-                    <Border Grid.Column="1">
+                    <Border Grid.Row="0" Grid.Column="1">
                         <views:FileListControl
                             AllowDrop="True"
                             DataContext="{Binding MetadataTextListViewModel}"
@@ -147,6 +152,19 @@
                                 <behaviors:FileDropBehavior />
                             </i:Interaction.Behaviors>
                         </views:FileListControl>
+                    </Border>
+
+                    <Border
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2">
+                        <Button
+                            Width="Auto"
+                            Margin="10"
+                            Padding="10,2"
+                            HorizontalAlignment="Right"
+                            Command="{Binding GenerateMetaDataTextsCommand}"
+                            Content="Generate metadata texts" />
                     </Border>
                 </Grid>
             </TabItem>

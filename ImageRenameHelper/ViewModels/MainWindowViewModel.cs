@@ -140,6 +140,30 @@ namespace ImageRenameHelper.ViewModels
         });
 
         /// <summary>
+        /// Extracts prompts from current metadata source files, saves them as JSON files,
+        /// and reloads the metadata text file list.
+        /// </summary>
+        public DelegateCommand GenerateMetaDataTextsCommand => new DelegateCommand(() =>
+        {
+            if (MetadataSourceListViewModel.Files.Count == 0)
+            {
+                return;
+            }
+
+            IEnumerable<(string FileName, Prompt Prompt)> fs = MetadataSourceListViewModel.Files.Select(f =>
+                (f.Name, MetadataUtil.ExtractMetadata(f.FullName)));
+
+            var destDir = MetadataTextListViewModel.CurrentDirectoryPath;
+            foreach (var f in fs)
+            {
+                var name = Path.GetFileNameWithoutExtension(f.FileName);
+                MetadataUtil.SavePromptToJsonFile(f.Prompt, Path.Combine(destDir, $"{name}.json"));
+            }
+
+            MetadataTextListViewModel.LoadFiles();
+        });
+
+        /// <summary>
         /// 作業ディレクトリを作成し、`PngInfoFileListViewModel` と `ImageToImageTargetFileListViewModel` の CurrentDirectoryPath にセットします。<br/>
         /// 作業ディレクトリのベースディレクトリは日時からネーミングされます。
         /// </summary>
