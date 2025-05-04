@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using BrowserController.Controllers;
 using ImageRenameHelper.Models;
 using ImageRenameHelper.Utils;
@@ -55,7 +56,7 @@ namespace ImageRenameHelper.ViewModels
         /// </summary>
         public DirectoryInfo CurrentDirectory { get; set; }
 
-        public TextWrapper TextWrapper { get; set; } = new ();
+        public string Title { get; set; } = GetAppNameWithVersion();
 
         public string Message { get => message; set => SetProperty(ref message, value); }
 
@@ -162,6 +163,15 @@ namespace ImageRenameHelper.ViewModels
 
             MetadataTextListViewModel.LoadFiles();
         });
+
+        private static string GetAppNameWithVersion()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var infoVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+            return !string.IsNullOrWhiteSpace(infoVersion)
+                ? $"File Organizer3 ver:{infoVersion}"
+                : "File Organizer3 (version unknown)";
+        }
 
         /// <summary>
         /// 作業ディレクトリを作成し、`PngInfoFileListViewModel` と `ImageToImageTargetFileListViewModel` の CurrentDirectoryPath にセットします。<br/>
