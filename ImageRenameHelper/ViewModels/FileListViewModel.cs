@@ -77,6 +77,8 @@ namespace ImageRenameHelper.ViewModels
             }
         }
 
+        public string SupportedExtension { get; set; } = "*";
+
         public DelegateCommand MoveUpCommand => new (() =>
         {
             if (Files.Count == 0 || SelectedItem == null)
@@ -176,7 +178,15 @@ namespace ImageRenameHelper.ViewModels
             }
 
             Files.Clear();
-            Files.AddRange(Directory.GetFiles(directoryPath).Select(f => new FileListItem(new FileInfo(f))));
+            var fileList =
+                Directory.GetFiles(directoryPath).Select(f => new FileListItem(new FileInfo(f))).ToList();
+
+            if (SupportedExtension != "*")
+            {
+                fileList = fileList.Where(f => f.Extension.ToLower().EndsWith(SupportedExtension)).ToList();
+            }
+
+            Files.AddRange(fileList);
             ReOrder();
 
             CurrentDirectoryPath = directoryPath;

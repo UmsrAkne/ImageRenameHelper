@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using BrowserController.Controllers;
 using ImageRenameHelper.Models;
 using ImageRenameHelper.Utils;
@@ -28,6 +29,8 @@ namespace ImageRenameHelper.ViewModels
             PngInfoFileListViewModel = new FileListViewModel();
             ImageToImageTargetFileListViewModel = new FileListViewModel();
             TemporaryFileListViewModel = new FileListViewModel();
+            MetadataSourceListViewModel = new FileListViewModel() { SupportedExtension = ".png", };
+            MetadataTextListViewModel = new FileListViewModel() { SupportedExtension = ".json", };
 
             SetupWorkingDirectories();
 
@@ -41,6 +44,8 @@ namespace ImageRenameHelper.ViewModels
             PngInfoFileListViewModel = new FileListViewModel();
             ImageToImageTargetFileListViewModel = new FileListViewModel();
             TemporaryFileListViewModel = new FileListViewModel();
+            MetadataSourceListViewModel = new FileListViewModel() { SupportedExtension = ".png", };
+            MetadataTextListViewModel = new FileListViewModel() { SupportedExtension = ".json", };
 
             SetupWorkingDirectories();
         }
@@ -51,13 +56,17 @@ namespace ImageRenameHelper.ViewModels
         /// </summary>
         public DirectoryInfo CurrentDirectory { get; set; }
 
-        public TextWrapper TextWrapper { get; set; } = new ();
+        public string Title { get; set; } = GetAppNameWithVersion();
 
         public string Message { get => message; set => SetProperty(ref message, value); }
 
         public FileListViewModel PngInfoFileListViewModel { get; }
 
         public FileListViewModel ImageToImageTargetFileListViewModel { get; }
+
+        public FileListViewModel MetadataSourceListViewModel { get; }
+
+        public FileListViewModel MetadataTextListViewModel { get; }
 
         public FileListViewModel TemporaryFileListViewModel { get; }
 
@@ -132,6 +141,39 @@ namespace ImageRenameHelper.ViewModels
         });
 
         /// <summary>
+        /// Extracts prompts from current metadata source files, saves them as JSON files,
+        /// and reloads the metadata text file list.
+        /// </summary>
+        public DelegateCommand GenerateMetaDataTextsCommand => new DelegateCommand(() =>
+        {
+            if (MetadataSourceListViewModel.Files.Count == 0)
+            {
+                return;
+            }
+
+            IEnumerable<(string FileName, Prompt Prompt)> fs = MetadataSourceListViewModel.Files.Select(f =>
+                (f.Name, MetadataUtil.ExtractMetadata(f.FullName)));
+
+            var destDir = MetadataTextListViewModel.CurrentDirectoryPath;
+            foreach (var f in fs)
+            {
+                var name = Path.GetFileNameWithoutExtension(f.FileName);
+                MetadataUtil.SavePromptToJsonFile(f.Prompt, Path.Combine(destDir, $"{name}.json"));
+            }
+
+            MetadataTextListViewModel.LoadFiles();
+        });
+
+        private static string GetAppNameWithVersion()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var infoVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+            return !string.IsNullOrWhiteSpace(infoVersion)
+                ? $"File Organizer3 ver:{infoVersion}"
+                : "File Organizer3 (version unknown)";
+        }
+
+        /// <summary>
         /// 作業ディレクトリを作成し、`PngInfoFileListViewModel` と `ImageToImageTargetFileListViewModel` の CurrentDirectoryPath にセットします。<br/>
         /// 作業ディレクトリのベースディレクトリは日時からネーミングされます。
         /// </summary>
@@ -152,6 +194,8 @@ namespace ImageRenameHelper.ViewModels
 
             var pngInfoDir = Path.Combine(CurrentDirectory.FullName, "png-info-images");
             var imagesDir = Path.Combine(CurrentDirectory.FullName, "target-images");
+            var metaDataSourceDir = Path.Combine(CurrentDirectory.FullName, "metadata-sources");
+            var metaDataDir = Path.Combine(CurrentDirectory.FullName, "metadata");
             var temporaryDir = Path.Combine(CurrentDirectory.FullName, "temporary");
 
             Directory.CreateDirectory(CurrentDirectory.FullName);
@@ -166,6 +210,10 @@ namespace ImageRenameHelper.ViewModels
                 : Directory.CreateDirectory(imagesDir).FullName;
 
             ImageToImageTargetFileListViewModel.LoadFiles();
+
+            MetadataSourceListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(metaDataSourceDir).FullName;
+
+            MetadataTextListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(metaDataDir).FullName;
 
             TemporaryFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(temporaryDir).FullName;
         }
