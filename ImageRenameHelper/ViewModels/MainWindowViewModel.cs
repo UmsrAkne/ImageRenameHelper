@@ -28,8 +28,8 @@ namespace ImageRenameHelper.ViewModels
             PngInfoFileListViewModel = new FileListViewModel();
             ImageToImageTargetFileListViewModel = new FileListViewModel();
             TemporaryFileListViewModel = new FileListViewModel();
-            MetadataSourceListViewModel = new FileListViewModel();
-            MetadataTextListViewModel = new FileListViewModel();
+            MetadataSourceListViewModel = new FileListViewModel() { SupportedExtension = ".png", };
+            MetadataTextListViewModel = new FileListViewModel() { SupportedExtension = ".json", };
 
             SetupWorkingDirectories();
 
@@ -43,8 +43,8 @@ namespace ImageRenameHelper.ViewModels
             PngInfoFileListViewModel = new FileListViewModel();
             ImageToImageTargetFileListViewModel = new FileListViewModel();
             TemporaryFileListViewModel = new FileListViewModel();
-            MetadataSourceListViewModel = new FileListViewModel();
-            MetadataTextListViewModel = new FileListViewModel();
+            MetadataSourceListViewModel = new FileListViewModel() { SupportedExtension = ".png", };
+            MetadataTextListViewModel = new FileListViewModel() { SupportedExtension = ".json", };
 
             SetupWorkingDirectories();
         }
