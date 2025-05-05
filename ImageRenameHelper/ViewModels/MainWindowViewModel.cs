@@ -169,8 +169,8 @@ namespace ImageRenameHelper.ViewModels
             var assembly = Assembly.GetExecutingAssembly();
             var infoVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
             return !string.IsNullOrWhiteSpace(infoVersion)
-                ? $"File Organizer3 ver:{infoVersion}"
-                : "File Organizer3 (version unknown)";
+                ? $"Image Rename Helper ver:{infoVersion}"
+                : "Image Rename Helper (version unknown)";
         }
 
         /// <summary>
