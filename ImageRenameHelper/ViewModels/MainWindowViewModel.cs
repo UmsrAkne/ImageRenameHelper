@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using BrowserController.Controllers;
 using ImageRenameHelper.Models;
-using ImageRenameHelper.Utils;
 using ImageRenameHelper.Views;
 using Prism.Commands;
 using Prism.Ioc;
@@ -21,33 +18,22 @@ namespace ImageRenameHelper.ViewModels
     {
         private readonly IDialogService dialogService;
         private string message;
-        private int selectedIndex;
-        private bool enabledCursorPositionSyncMode;
 
         public MainWindowViewModel()
         {
-            PngInfoFileListViewModel = new FileListViewModel();
-            ImageToImageTargetFileListViewModel = new FileListViewModel();
-            TemporaryFileListViewModel = new FileListViewModel();
-            MetadataSourceListViewModel = new FileListViewModel() { SupportedExtension = ".png", };
-            MetadataTextListViewModel = new FileListViewModel() { SupportedExtension = ".json", };
-
             SetupWorkingDirectories();
-
             SetDummies();
         }
 
         public MainWindowViewModel(IContainerProvider containerProvider)
         {
             dialogService = containerProvider.Resolve<IDialogService>();
-
-            PngInfoFileListViewModel = new FileListViewModel();
-            ImageToImageTargetFileListViewModel = new FileListViewModel();
-            TemporaryFileListViewModel = new FileListViewModel();
-            MetadataSourceListViewModel = new FileListViewModel() { SupportedExtension = ".png", };
-            MetadataTextListViewModel = new FileListViewModel() { SupportedExtension = ".json", };
-
             SetupWorkingDirectories();
+
+            ImagesViewModel.SystemMessagePublished += (_, msg) =>
+            {
+                Message = msg;
+            };
         }
 
         /// <summary>
@@ -60,57 +46,11 @@ namespace ImageRenameHelper.ViewModels
 
         public string Message { get => message; set => SetProperty(ref message, value); }
 
-        public FileListViewModel PngInfoFileListViewModel { get; }
+        public ImagesViewModel ImagesViewModel { get; } = new ();
 
-        public FileListViewModel ImageToImageTargetFileListViewModel { get; }
+        public TemporaryFilesTabViewModel TemporaryFilesTabViewModel { get; } = new ();
 
-        public FileListViewModel MetadataSourceListViewModel { get; }
-
-        public FileListViewModel MetadataTextListViewModel { get; }
-
-        public FileListViewModel TemporaryFileListViewModel { get; }
-
-        public bool EnabledCursorPositionSyncMode
-        {
-            get => enabledCursorPositionSyncMode;
-            set => SetProperty(ref enabledCursorPositionSyncMode, value);
-        }
-
-        public int SelectedIndex
-        {
-            get => selectedIndex;
-            set
-            {
-                if (!EnabledCursorPositionSyncMode)
-                {
-                    return;
-                }
-
-                PngInfoFileListViewModel.SelectedIndex = value;
-                ImageToImageTargetFileListViewModel.SelectedIndex = value;
-                SetProperty(ref selectedIndex, value);
-            }
-        }
-
-        public DelegateCommand SyncFileNamesCommand => new (() =>
-        {
-            if (PngInfoFileListViewModel.Files.Count() != ImageToImageTargetFileListViewModel.Files.Count())
-            {
-                Message = "リネーム操作は左右のリストのファイル数が同数でなければ実行できません。";
-                return;
-            }
-
-            FileRenameUtil.RenameFiles(
-                PngInfoFileListViewModel.Files.ToList(), ImageToImageTargetFileListViewModel.Files.ToList());
-
-            ImageToImageTargetFileListViewModel.LoadFiles();
-            Message = string.Empty;
-        });
-
-        public DelegateCommand ToggleCursorSyncModeCommand => new (() =>
-        {
-            EnabledCursorPositionSyncMode = !EnabledCursorPositionSyncMode;
-        });
+        public ImageToJsonTabViewModel ImageToJsonTabViewModel { get; } = new ();
 
         public DelegateCommand ShowWorkingDirectoryChangePageCommand => new DelegateCommand(() =>
         {
@@ -125,52 +65,13 @@ namespace ImageRenameHelper.ViewModels
             });
         });
 
-        public DelegateCommand BrowserControlCommand => new DelegateCommand(() =>
-        {
-            var pvm = PngInfoFileListViewModel;
-            var ivm = ImageToImageTargetFileListViewModel;
-
-            if (pvm.Files.Count != ivm.Files.Count || pvm.Files.Count + ivm.Files.Count == 0)
-            {
-                Message = "このコマンドを実行するには、２つの作業ディレクトリにファイルが一つ以上存在し、更に同数である必要があります。";
-                return;
-            }
-
-            I2IController.SetupBatchFromDirectory(
-                pvm.CurrentDirectoryPath, ivm.CurrentDirectoryPath);
-        });
-
-        /// <summary>
-        /// Extracts prompts from current metadata source files, saves them as JSON files,
-        /// and reloads the metadata text file list.
-        /// </summary>
-        public DelegateCommand GenerateMetaDataTextsCommand => new DelegateCommand(() =>
-        {
-            if (MetadataSourceListViewModel.Files.Count == 0)
-            {
-                return;
-            }
-
-            IEnumerable<(string FileName, Prompt Prompt)> fs = MetadataSourceListViewModel.Files.Select(f =>
-                (f.Name, MetadataUtil.ExtractMetadata(f.FullName)));
-
-            var destDir = MetadataTextListViewModel.CurrentDirectoryPath;
-            foreach (var f in fs)
-            {
-                var name = Path.GetFileNameWithoutExtension(f.FileName);
-                MetadataUtil.SavePromptToJsonFile(f.Prompt, Path.Combine(destDir, $"{name}.json"));
-            }
-
-            MetadataTextListViewModel.LoadFiles();
-        });
-
         private static string GetAppNameWithVersion()
         {
             var assembly = Assembly.GetExecutingAssembly();
             var infoVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
             return !string.IsNullOrWhiteSpace(infoVersion)
-                ? $"File Organizer3 ver:{infoVersion}"
-                : "File Organizer3 (version unknown)";
+                ? $"Image Rename Helper ver:{infoVersion}"
+                : "Image Rename Helper (version unknown)";
         }
 
         /// <summary>
@@ -199,23 +100,23 @@ namespace ImageRenameHelper.ViewModels
             var temporaryDir = Path.Combine(CurrentDirectory.FullName, "temporary");
 
             Directory.CreateDirectory(CurrentDirectory.FullName);
-            PngInfoFileListViewModel.CurrentDirectoryPath = Directory.Exists(pngInfoDir)
+            ImagesViewModel.PngInfoFileListViewModel.CurrentDirectoryPath = Directory.Exists(pngInfoDir)
                 ? pngInfoDir
                 : Directory.CreateDirectory(pngInfoDir).FullName;
 
-            PngInfoFileListViewModel.LoadFiles();
+            ImagesViewModel.PngInfoFileListViewModel.LoadFiles();
 
-            ImageToImageTargetFileListViewModel.CurrentDirectoryPath = Directory.Exists(imagesDir)
+            ImagesViewModel.ImageToImageTargetFileListViewModel.CurrentDirectoryPath = Directory.Exists(imagesDir)
                 ? imagesDir
                 : Directory.CreateDirectory(imagesDir).FullName;
 
-            ImageToImageTargetFileListViewModel.LoadFiles();
+            ImagesViewModel.ImageToImageTargetFileListViewModel.LoadFiles();
 
-            MetadataSourceListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(metaDataSourceDir).FullName;
+            ImageToJsonTabViewModel.MetadataSourceListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(metaDataSourceDir).FullName;
 
-            MetadataTextListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(metaDataDir).FullName;
+            ImageToJsonTabViewModel.MetadataTextListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(metaDataDir).FullName;
 
-            TemporaryFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(temporaryDir).FullName;
+            TemporaryFilesTabViewModel.TemporaryFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(temporaryDir).FullName;
         }
 
         [Conditional("DEBUG")]
@@ -230,10 +131,10 @@ namespace ImageRenameHelper.ViewModels
                 dummyList2.Add(new FileListItem(new FileInfo($"targetImage-{i}.png")));
             }
 
-            PngInfoFileListViewModel.Files.AddRange(dummyList);
-            PngInfoFileListViewModel.CurrentDirectoryPath = @"C:\Users\tests\PngInfos\";
-            ImageToImageTargetFileListViewModel.Files.AddRange(dummyList2);
-            ImageToImageTargetFileListViewModel.CurrentDirectoryPath = @"C:\Users\tests\Pictures\";
+            ImagesViewModel.PngInfoFileListViewModel.Files.AddRange(dummyList);
+            ImagesViewModel.PngInfoFileListViewModel.CurrentDirectoryPath = @"C:\Users\tests\PngInfos\";
+            ImagesViewModel.ImageToImageTargetFileListViewModel.Files.AddRange(dummyList2);
+            ImagesViewModel.ImageToImageTargetFileListViewModel.CurrentDirectoryPath = @"C:\Users\tests\Pictures\";
         }
     }
 }

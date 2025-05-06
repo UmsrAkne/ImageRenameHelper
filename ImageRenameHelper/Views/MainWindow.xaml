@@ -19,7 +19,7 @@
     <Window.InputBindings>
         <KeyBinding
             Key="S"
-            Command="{Binding ToggleCursorSyncModeCommand}"
+            Command="{Binding ImagesViewModel.ToggleCursorSyncModeCommand}"
             Modifiers="Control" />
 
         <KeyBinding
@@ -58,7 +58,7 @@
                     <Border Grid.Row="0" Grid.Column="0">
                         <views:FileListControl
                             AllowDrop="True"
-                            DataContext="{Binding PngInfoFileListViewModel}"
+                            DataContext="{Binding ImagesViewModel.PngInfoFileListViewModel}"
                             ImageAlignment="Right">
                             <i:Interaction.Behaviors>
                                 <behaviors:FileDropBehavior />
@@ -69,7 +69,7 @@
                     <Border Grid.Row="0" Grid.Column="1">
                         <views:FileListControl
                             AllowDrop="True"
-                            DataContext="{Binding ImageToImageTargetFileListViewModel}"
+                            DataContext="{Binding ImagesViewModel.ImageToImageTargetFileListViewModel}"
                             ImageAlignment="Left">
                             <i:Interaction.Behaviors>
                                 <behaviors:FileDropBehavior />
@@ -87,7 +87,7 @@
                         <ToggleButton
                             Margin="30,10"
                             Padding="20,2"
-                            IsChecked="{Binding EnabledCursorPositionSyncMode}">
+                            IsChecked="{Binding ImagesViewModel.EnabledCursorPositionSyncMode}">
                             <ToggleButton.Style>
                                 <Style TargetType="ToggleButton">
                                     <Style.Triggers>
@@ -107,13 +107,13 @@
                         <Button
                             Margin="10"
                             Padding="20,2"
-                            Command="{Binding SyncFileNamesCommand}"
+                            Command="{Binding ImagesViewModel.SyncFileNamesCommand}"
                             Content="Sync FileName" />
 
                         <Button
                             Margin="10"
                             Padding="20,2"
-                            Command="{Binding BrowserControlCommand}"
+                            Command="{Binding ImagesViewModel.BrowserControlCommand}"
                             Content="Setup i2i Batch Process" />
 
                     </StackPanel>
@@ -135,7 +135,7 @@
                     <Border Grid.Row="0" Grid.Column="0">
                         <views:FileListControl
                             AllowDrop="True"
-                            DataContext="{Binding MetadataSourceListViewModel}"
+                            DataContext="{Binding ImageToJsonTabViewModel.MetadataSourceListViewModel}"
                             ImageAlignment="Center">
                             <i:Interaction.Behaviors>
                                 <behaviors:FileDropBehavior />
@@ -146,7 +146,7 @@
                     <Border Grid.Row="0" Grid.Column="1">
                         <views:FileListControl
                             AllowDrop="True"
-                            DataContext="{Binding MetadataTextListViewModel}"
+                            DataContext="{Binding ImageToJsonTabViewModel.MetadataTextListViewModel}"
                             ImageAlignment="Center">
                             <i:Interaction.Behaviors>
                                 <behaviors:FileDropBehavior />
@@ -163,7 +163,7 @@
                             Margin="10"
                             Padding="10,2"
                             HorizontalAlignment="Right"
-                            Command="{Binding GenerateMetaDataTextsCommand}"
+                            Command="{Binding ImageToJsonTabViewModel.GenerateMetaDataTextsCommand}"
                             Content="Generate metadata texts" />
                     </Border>
                 </Grid>
@@ -173,7 +173,7 @@
                 <Border>
                     <views:FileListControl
                         AllowDrop="True"
-                        DataContext="{Binding TemporaryFileListViewModel}"
+                        DataContext="{Binding TemporaryFilesTabViewModel.TemporaryFileListViewModel}"
                         ImageAlignment="Center">
                         <i:Interaction.Behaviors>
                             <behaviors:FileDropBehavior />
