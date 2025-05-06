@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using ImageRenameHelper.Models;
-using ImageRenameHelper.Utils;
 using ImageRenameHelper.Views;
 using Prism.Commands;
 using Prism.Ioc;
@@ -23,21 +21,13 @@ namespace ImageRenameHelper.ViewModels
 
         public MainWindowViewModel()
         {
-            MetadataSourceListViewModel = new FileListViewModel() { SupportedExtension = ".png", };
-            MetadataTextListViewModel = new FileListViewModel() { SupportedExtension = ".json", };
-
             SetupWorkingDirectories();
-
             SetDummies();
         }
 
         public MainWindowViewModel(IContainerProvider containerProvider)
         {
             dialogService = containerProvider.Resolve<IDialogService>();
-
-            MetadataSourceListViewModel = new FileListViewModel() { SupportedExtension = ".png", };
-            MetadataTextListViewModel = new FileListViewModel() { SupportedExtension = ".json", };
-
             SetupWorkingDirectories();
         }
 
@@ -55,9 +45,7 @@ namespace ImageRenameHelper.ViewModels
 
         public TemporaryFilesTabViewModel TemporaryFilesTabViewModel { get; } = new ();
 
-        public FileListViewModel MetadataSourceListViewModel { get; }
-
-        public FileListViewModel MetadataTextListViewModel { get; }
+        public ImageToJsonTabViewModel ImageToJsonTabViewModel { get; } = new ();
 
         public DelegateCommand ShowWorkingDirectoryChangePageCommand => new DelegateCommand(() =>
         {
@@ -70,30 +58,6 @@ namespace ImageRenameHelper.ViewModels
                             nameof(WorkingDirectoryChangePageViewModel.WorkingDirectoryName)));
                 }
             });
-        });
-
-        /// <summary>
-        /// Extracts prompts from current metadata source files, saves them as JSON files,
-        /// and reloads the metadata text file list.
-        /// </summary>
-        public DelegateCommand GenerateMetaDataTextsCommand => new DelegateCommand(() =>
-        {
-            if (MetadataSourceListViewModel.Files.Count == 0)
-            {
-                return;
-            }
-
-            IEnumerable<(string FileName, Prompt Prompt)> fs = MetadataSourceListViewModel.Files.Select(f =>
-                (f.Name, MetadataUtil.ExtractMetadata(f.FullName)));
-
-            var destDir = MetadataTextListViewModel.CurrentDirectoryPath;
-            foreach (var f in fs)
-            {
-                var name = Path.GetFileNameWithoutExtension(f.FileName);
-                MetadataUtil.SavePromptToJsonFile(f.Prompt, Path.Combine(destDir, $"{name}.json"));
-            }
-
-            MetadataTextListViewModel.LoadFiles();
         });
 
         private static string GetAppNameWithVersion()
@@ -143,9 +107,9 @@ namespace ImageRenameHelper.ViewModels
 
             ImagesViewModel.ImageToImageTargetFileListViewModel.LoadFiles();
 
-            MetadataSourceListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(metaDataSourceDir).FullName;
+            ImageToJsonTabViewModel.MetadataSourceListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(metaDataSourceDir).FullName;
 
-            MetadataTextListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(metaDataDir).FullName;
+            ImageToJsonTabViewModel.MetadataTextListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(metaDataDir).FullName;
 
             TemporaryFilesTabViewModel.TemporaryFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(temporaryDir).FullName;
         }

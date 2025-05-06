@@ -135,7 +135,7 @@
                     <Border Grid.Row="0" Grid.Column="0">
                         <views:FileListControl
                             AllowDrop="True"
-                            DataContext="{Binding MetadataSourceListViewModel}"
+                            DataContext="{Binding ImageToJsonTabViewModel.MetadataSourceListViewModel}"
                             ImageAlignment="Center">
                             <i:Interaction.Behaviors>
                                 <behaviors:FileDropBehavior />
@@ -146,7 +146,7 @@
                     <Border Grid.Row="0" Grid.Column="1">
                         <views:FileListControl
                             AllowDrop="True"
-                            DataContext="{Binding MetadataTextListViewModel}"
+                            DataContext="{Binding ImageToJsonTabViewModel.MetadataTextListViewModel}"
                             ImageAlignment="Center">
                             <i:Interaction.Behaviors>
                                 <behaviors:FileDropBehavior />
@@ -163,7 +163,7 @@
                             Margin="10"
                             Padding="10,2"
                             HorizontalAlignment="Right"
-                            Command="{Binding GenerateMetaDataTextsCommand}"
+                            Command="{Binding ImageToJsonTabViewModel.GenerateMetaDataTextsCommand}"
                             Content="Generate metadata texts" />
                     </Border>
                 </Grid>
