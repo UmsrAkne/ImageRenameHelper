@@ -29,6 +29,11 @@ namespace ImageRenameHelper.ViewModels
         {
             dialogService = containerProvider.Resolve<IDialogService>();
             SetupWorkingDirectories();
+
+            ImagesViewModel.SystemMessagePublished += (_, msg) =>
+            {
+                Message = msg;
+            };
         }
 
         /// <summary>

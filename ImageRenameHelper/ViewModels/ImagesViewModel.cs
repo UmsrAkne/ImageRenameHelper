@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using BrowserController.Controllers;
 using ImageRenameHelper.Utils;
@@ -7,10 +8,12 @@ using Prism.Mvvm;
 namespace ImageRenameHelper.ViewModels
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class ImagesViewModel : BindableBase
+    public class ImagesViewModel : BindableBase, IMessenger
     {
         private int selectedIndex;
         private bool enabledCursorPositionSyncMode;
+
+        public event EventHandler<string> SystemMessagePublished;
 
         public FileListViewModel PngInfoFileListViewModel { get; } = new () { SupportedExtension = "png", };
 
@@ -42,8 +45,7 @@ namespace ImageRenameHelper.ViewModels
         {
             if (PngInfoFileListViewModel.Files.Count() != ImageToImageTargetFileListViewModel.Files.Count())
             {
-                // Todo: Temporarily commented out
-                // Message = "リネーム操作は左右のリストのファイル数が同数でなければ実行できません。";
+                PublishSystemMessage("リネーム操作は左右のリストのファイル数が同数でなければ実行できません。");
                 return;
             }
 
@@ -52,8 +54,7 @@ namespace ImageRenameHelper.ViewModels
 
             ImageToImageTargetFileListViewModel.LoadFiles();
 
-            // Todo: Temporarily commented out
-            // Message = string.Empty;
+            PublishSystemMessage(string.Empty);
         });
 
         public DelegateCommand ToggleCursorSyncModeCommand => new (() =>
@@ -68,13 +69,17 @@ namespace ImageRenameHelper.ViewModels
 
             if (pvm.Files.Count != ivm.Files.Count || pvm.Files.Count + ivm.Files.Count == 0)
             {
-                // Todo: Temporarily commented out
-                // Message = "このコマンドを実行するには、２つの作業ディレクトリにファイルが一つ以上存在し、更に同数である必要があります。";
+                PublishSystemMessage("このコマンドを実行するには、２つの作業ディレクトリにファイルが一つ以上存在し、更に同数である必要があります。");
                 return;
             }
 
             I2IController.SetupBatchFromDirectory(
                 pvm.CurrentDirectoryPath, ivm.CurrentDirectoryPath);
         });
+
+        private void PublishSystemMessage(string message)
+        {
+            SystemMessagePublished?.Invoke(this, message);
+        }
     }
 }
