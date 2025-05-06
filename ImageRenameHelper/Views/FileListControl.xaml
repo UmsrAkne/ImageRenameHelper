@@ -88,7 +88,7 @@
             BorderBrush="DimGray"
             BorderThickness="1"
             ItemsSource="{Binding Files}"
-            SelectedIndex="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:MainWindow}, Path=DataContext.(viewModels:MainWindowViewModel.SelectedIndex)}"
+            SelectedIndex="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:MainWindow}, Path=DataContext.(viewModels:MainWindowViewModel.ImagesViewModel).SelectedIndex}"
             SelectedItem="{Binding SelectedItem}">
 
             <ListBox.InputBindings>

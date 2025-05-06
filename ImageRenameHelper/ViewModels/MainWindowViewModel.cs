@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using BrowserController.Controllers;
 using ImageRenameHelper.Models;
 using ImageRenameHelper.Utils;
 using ImageRenameHelper.Views;
@@ -21,13 +20,9 @@ namespace ImageRenameHelper.ViewModels
     {
         private readonly IDialogService dialogService;
         private string message;
-        private int selectedIndex;
-        private bool enabledCursorPositionSyncMode;
 
         public MainWindowViewModel()
         {
-            PngInfoFileListViewModel = new FileListViewModel();
-            ImageToImageTargetFileListViewModel = new FileListViewModel();
             TemporaryFileListViewModel = new FileListViewModel();
             MetadataSourceListViewModel = new FileListViewModel() { SupportedExtension = ".png", };
             MetadataTextListViewModel = new FileListViewModel() { SupportedExtension = ".json", };
@@ -41,8 +36,6 @@ namespace ImageRenameHelper.ViewModels
         {
             dialogService = containerProvider.Resolve<IDialogService>();
 
-            PngInfoFileListViewModel = new FileListViewModel();
-            ImageToImageTargetFileListViewModel = new FileListViewModel();
             TemporaryFileListViewModel = new FileListViewModel();
             MetadataSourceListViewModel = new FileListViewModel() { SupportedExtension = ".png", };
             MetadataTextListViewModel = new FileListViewModel() { SupportedExtension = ".json", };
@@ -60,57 +53,13 @@ namespace ImageRenameHelper.ViewModels
 
         public string Message { get => message; set => SetProperty(ref message, value); }
 
-        public FileListViewModel PngInfoFileListViewModel { get; }
-
-        public FileListViewModel ImageToImageTargetFileListViewModel { get; }
+        public ImagesViewModel ImagesViewModel { get; } = new ();
 
         public FileListViewModel MetadataSourceListViewModel { get; }
 
         public FileListViewModel MetadataTextListViewModel { get; }
 
         public FileListViewModel TemporaryFileListViewModel { get; }
-
-        public bool EnabledCursorPositionSyncMode
-        {
-            get => enabledCursorPositionSyncMode;
-            set => SetProperty(ref enabledCursorPositionSyncMode, value);
-        }
-
-        public int SelectedIndex
-        {
-            get => selectedIndex;
-            set
-            {
-                if (!EnabledCursorPositionSyncMode)
-                {
-                    return;
-                }
-
-                PngInfoFileListViewModel.SelectedIndex = value;
-                ImageToImageTargetFileListViewModel.SelectedIndex = value;
-                SetProperty(ref selectedIndex, value);
-            }
-        }
-
-        public DelegateCommand SyncFileNamesCommand => new (() =>
-        {
-            if (PngInfoFileListViewModel.Files.Count() != ImageToImageTargetFileListViewModel.Files.Count())
-            {
-                Message = "リネーム操作は左右のリストのファイル数が同数でなければ実行できません。";
-                return;
-            }
-
-            FileRenameUtil.RenameFiles(
-                PngInfoFileListViewModel.Files.ToList(), ImageToImageTargetFileListViewModel.Files.ToList());
-
-            ImageToImageTargetFileListViewModel.LoadFiles();
-            Message = string.Empty;
-        });
-
-        public DelegateCommand ToggleCursorSyncModeCommand => new (() =>
-        {
-            EnabledCursorPositionSyncMode = !EnabledCursorPositionSyncMode;
-        });
 
         public DelegateCommand ShowWorkingDirectoryChangePageCommand => new DelegateCommand(() =>
         {
@@ -123,21 +72,6 @@ namespace ImageRenameHelper.ViewModels
                             nameof(WorkingDirectoryChangePageViewModel.WorkingDirectoryName)));
                 }
             });
-        });
-
-        public DelegateCommand BrowserControlCommand => new DelegateCommand(() =>
-        {
-            var pvm = PngInfoFileListViewModel;
-            var ivm = ImageToImageTargetFileListViewModel;
-
-            if (pvm.Files.Count != ivm.Files.Count || pvm.Files.Count + ivm.Files.Count == 0)
-            {
-                Message = "このコマンドを実行するには、２つの作業ディレクトリにファイルが一つ以上存在し、更に同数である必要があります。";
-                return;
-            }
-
-            I2IController.SetupBatchFromDirectory(
-                pvm.CurrentDirectoryPath, ivm.CurrentDirectoryPath);
         });
 
         /// <summary>
@@ -199,17 +133,17 @@ namespace ImageRenameHelper.ViewModels
             var temporaryDir = Path.Combine(CurrentDirectory.FullName, "temporary");
 
             Directory.CreateDirectory(CurrentDirectory.FullName);
-            PngInfoFileListViewModel.CurrentDirectoryPath = Directory.Exists(pngInfoDir)
+            ImagesViewModel.PngInfoFileListViewModel.CurrentDirectoryPath = Directory.Exists(pngInfoDir)
                 ? pngInfoDir
                 : Directory.CreateDirectory(pngInfoDir).FullName;
 
-            PngInfoFileListViewModel.LoadFiles();
+            ImagesViewModel.PngInfoFileListViewModel.LoadFiles();
 
-            ImageToImageTargetFileListViewModel.CurrentDirectoryPath = Directory.Exists(imagesDir)
+            ImagesViewModel.ImageToImageTargetFileListViewModel.CurrentDirectoryPath = Directory.Exists(imagesDir)
                 ? imagesDir
                 : Directory.CreateDirectory(imagesDir).FullName;
 
-            ImageToImageTargetFileListViewModel.LoadFiles();
+            ImagesViewModel.ImageToImageTargetFileListViewModel.LoadFiles();
 
             MetadataSourceListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(metaDataSourceDir).FullName;
 
@@ -230,10 +164,10 @@ namespace ImageRenameHelper.ViewModels
                 dummyList2.Add(new FileListItem(new FileInfo($"targetImage-{i}.png")));
             }
 
-            PngInfoFileListViewModel.Files.AddRange(dummyList);
-            PngInfoFileListViewModel.CurrentDirectoryPath = @"C:\Users\tests\PngInfos\";
-            ImageToImageTargetFileListViewModel.Files.AddRange(dummyList2);
-            ImageToImageTargetFileListViewModel.CurrentDirectoryPath = @"C:\Users\tests\Pictures\";
+            ImagesViewModel.PngInfoFileListViewModel.Files.AddRange(dummyList);
+            ImagesViewModel.PngInfoFileListViewModel.CurrentDirectoryPath = @"C:\Users\tests\PngInfos\";
+            ImagesViewModel.ImageToImageTargetFileListViewModel.Files.AddRange(dummyList2);
+            ImagesViewModel.ImageToImageTargetFileListViewModel.CurrentDirectoryPath = @"C:\Users\tests\Pictures\";
         }
     }
 }
