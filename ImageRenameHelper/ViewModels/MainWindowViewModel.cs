@@ -23,7 +23,6 @@ namespace ImageRenameHelper.ViewModels
 
         public MainWindowViewModel()
         {
-            TemporaryFileListViewModel = new FileListViewModel();
             MetadataSourceListViewModel = new FileListViewModel() { SupportedExtension = ".png", };
             MetadataTextListViewModel = new FileListViewModel() { SupportedExtension = ".json", };
 
@@ -36,7 +35,6 @@ namespace ImageRenameHelper.ViewModels
         {
             dialogService = containerProvider.Resolve<IDialogService>();
 
-            TemporaryFileListViewModel = new FileListViewModel();
             MetadataSourceListViewModel = new FileListViewModel() { SupportedExtension = ".png", };
             MetadataTextListViewModel = new FileListViewModel() { SupportedExtension = ".json", };
 
@@ -55,11 +53,11 @@ namespace ImageRenameHelper.ViewModels
 
         public ImagesViewModel ImagesViewModel { get; } = new ();
 
+        public TemporaryFilesTabViewModel TemporaryFilesTabViewModel { get; } = new ();
+
         public FileListViewModel MetadataSourceListViewModel { get; }
 
         public FileListViewModel MetadataTextListViewModel { get; }
-
-        public FileListViewModel TemporaryFileListViewModel { get; }
 
         public DelegateCommand ShowWorkingDirectoryChangePageCommand => new DelegateCommand(() =>
         {
@@ -149,7 +147,7 @@ namespace ImageRenameHelper.ViewModels
 
             MetadataTextListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(metaDataDir).FullName;
 
-            TemporaryFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(temporaryDir).FullName;
+            TemporaryFilesTabViewModel.TemporaryFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(temporaryDir).FullName;
         }
 
         [Conditional("DEBUG")]
