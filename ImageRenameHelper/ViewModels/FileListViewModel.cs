@@ -48,6 +48,11 @@ namespace ImageRenameHelper.ViewModels
                     LoadImage(selectedItem.FullName);
                     selectedItem.LoadMetaData();
                 }
+
+                if (selectedItem?.Extension.ToLower() == ".json")
+                {
+                    selectedItem.LoadText();
+                }
             }
         }
 

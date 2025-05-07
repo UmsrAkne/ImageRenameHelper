@@ -16,6 +16,7 @@
 
     <UserControl.Resources>
         <converters:DirectoryPathConverter x:Key="DirectoryPathConverter" />
+        <converters:NewLineConverter x:Key="NewLineConverter" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -31,7 +32,7 @@
             BorderBrush="DimGray"
             BorderThickness="1">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <TextBlock Text="{Binding SelectedItem.MetaDataText}" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding SelectedItem.MetaDataText, Converter={StaticResource NewLineConverter}}" TextWrapping="Wrap" />
             </ScrollViewer>
         </Border>
 

@@ -71,6 +71,16 @@ namespace ImageRenameHelper.Models
             Seed = ExtractSeedValue(MetaDataText);
         }
 
+        public void LoadText()
+        {
+            if (!string.IsNullOrWhiteSpace(MetaDataText))
+            {
+                return;
+            }
+
+            MetaDataText = File.ReadAllText(FullName);
+        }
+
         private string ExtractSeedValue(string text)
         {
             var match = Regex.Match(text, @"Seed:\s*(\d+),");
