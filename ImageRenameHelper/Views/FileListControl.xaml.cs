@@ -1,11 +1,10 @@
 using System.Windows;
-using System.Windows.Controls;
 
 namespace ImageRenameHelper.Views
 {
-    public partial class FileListControl : UserControl
+    public partial class FileListControl
     {
-        public static readonly DependencyProperty ImageAlignmentProperty =
+        public readonly static DependencyProperty ImageAlignmentProperty =
             DependencyProperty.Register(
                 nameof(ImageAlignment),
                 typeof(HorizontalAlignment),

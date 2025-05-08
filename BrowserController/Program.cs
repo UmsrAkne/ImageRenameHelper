@@ -2,6 +2,7 @@
 
 namespace BrowserController
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class Program
     {
         static void Main(string[] args)
