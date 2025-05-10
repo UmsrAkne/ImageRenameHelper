@@ -5,7 +5,7 @@ using ImageRenameHelper.Models;
 
 namespace ImageRenameHelper.Utils
 {
-    public class FileRenameUtil
+    public class FileSystemUtil
     {
         /// <summary>
         /// 受け取った２つのリストのうち、 b の中のファイル名を a と同じファイル名に変更します。<br/>
