@@ -49,7 +49,7 @@ namespace ImageRenameHelper.ViewModels
                 return;
             }
 
-            FileRenameUtil.RenameFiles(
+            FileSystemUtil.RenameFiles(
                 PngInfoFileListViewModel.Files.ToList(), ImageToImageTargetFileListViewModel.Files.ToList());
 
             ImageToImageTargetFileListViewModel.LoadFiles();

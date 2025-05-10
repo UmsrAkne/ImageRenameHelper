@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using ImageRenameHelper.Models;
+using ImageRenameHelper.Utils;
 using Prism.Commands;
 using Prism.Mvvm;
 
@@ -169,6 +170,17 @@ namespace ImageRenameHelper.ViewModels
             {
                 Clipboard.SetText(SelectedItem.Seed);
             }
+        });
+
+        public DelegateCommand CopyFileCommand => new DelegateCommand(() =>
+        {
+            if (SelectedItem == null)
+            {
+                return;
+            }
+
+            FileSystemUtil.CopyFile(SelectedItem.FullName, CurrentDirectoryPath);
+            LoadFiles();
         });
 
         /// <summary>

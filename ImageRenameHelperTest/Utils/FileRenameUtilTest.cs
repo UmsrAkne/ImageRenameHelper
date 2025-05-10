@@ -44,7 +44,7 @@ namespace ImageRenameHelperTest.Utils
         [Test]
         public void RenameFiles_ShouldRenameTargetFilesToOriginalNames()
         {
-            FileRenameUtil.RenameFiles(originalFiles, targetFiles);
+            FileSystemUtil.RenameFiles(originalFiles, targetFiles);
 
             for (var i = 0; i < originalFiles.Count; i++)
             {

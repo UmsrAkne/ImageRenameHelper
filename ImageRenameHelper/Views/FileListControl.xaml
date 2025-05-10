@@ -107,6 +107,11 @@
                     Key="Delete"
                     Command="{Binding DeleteFileCommand}"
                     Modifiers="Control" />
+
+                <KeyBinding
+                    Key="C"
+                    Command="{Binding CopyFileCommand}"
+                    Modifiers="Control" />
             </ListBox.InputBindings>
 
             <ListBox.ItemTemplate>

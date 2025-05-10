@@ -5,7 +5,7 @@ using ImageRenameHelper.Models;
 
 namespace ImageRenameHelper.Utils
 {
-    public class FileRenameUtil
+    public class FileSystemUtil
     {
         /// <summary>
         /// 受け取った２つのリストのうち、 b の中のファイル名を a と同じファイル名に変更します。<br/>
@@ -61,6 +61,35 @@ namespace ImageRenameHelper.Utils
                     Console.WriteLine($"Failed to rename {tempFilePath} to final name {newFileName}: {ex.Message}");
                 }
             }
+        }
+
+        /// <summary>
+        /// Copies the specified file to the destination directory.
+        /// A numbered suffix is automatically added to avoid overwriting existing files.
+        /// </summary>
+        /// <param name="targetFilePath">The full path of the file to copy.</param>
+        /// <param name="destDirectoryPath">The path to the destination directory.</param>
+        public static void CopyFile(string targetFilePath, string destDirectoryPath)
+        {
+            if (!File.Exists(targetFilePath) || !Directory.Exists(destDirectoryPath))
+            {
+                return;
+            }
+
+            var fileNameWe = Path.GetFileNameWithoutExtension(targetFilePath);
+            var extension = Path.GetExtension(targetFilePath);
+
+            var counter = 1;
+            string destPath;
+
+            do
+            {
+                destPath = Path.Combine(destDirectoryPath, fileNameWe + $"_copy_{counter:000}" + extension);
+                counter++;
+            }
+            while (File.Exists(destPath));
+
+            File.Copy(targetFilePath, destPath, true);
         }
     }
 }
