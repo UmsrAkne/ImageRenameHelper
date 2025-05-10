@@ -64,10 +64,11 @@ namespace ImageRenameHelper.Utils
         }
 
         /// <summary>
-        /// 指定ファイルをコピーします。コピー先のファイル名はメソッド内で自動的に設定されます。
+        /// Copies the specified file to the destination directory.
+        /// A numbered suffix is automatically added to avoid overwriting existing files.
         /// </summary>
-        /// <param name="targetFilePath">コピーする対象ファイルのフルパス</param>
-        /// <param name="destDirectoryPath">コピー先のディレクトリのパス</param>
+        /// <param name="targetFilePath">The full path of the file to copy.</param>
+        /// <param name="destDirectoryPath">The path to the destination directory.</param>
         public static void CopyFile(string targetFilePath, string destDirectoryPath)
         {
             if (!File.Exists(targetFilePath) || !Directory.Exists(destDirectoryPath))
@@ -79,12 +80,14 @@ namespace ImageRenameHelper.Utils
             var extension = Path.GetExtension(targetFilePath);
 
             var counter = 1;
-            var destPath = Path.Combine(destDirectoryPath, fileNameWe + $"_copy_{counter:000}" + extension);
-            while (File.Exists(destPath))
+            string destPath;
+
+            do
             {
                 destPath = Path.Combine(destDirectoryPath, fileNameWe + $"_copy_{counter:000}" + extension);
                 counter++;
             }
+            while (File.Exists(destPath));
 
             File.Copy(targetFilePath, destPath, true);
         }
