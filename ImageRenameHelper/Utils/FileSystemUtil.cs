@@ -62,5 +62,31 @@ namespace ImageRenameHelper.Utils
                 }
             }
         }
+
+        /// <summary>
+        /// 指定ファイルをコピーします。コピー先のファイル名はメソッド内で自動的に設定されます。
+        /// </summary>
+        /// <param name="targetFilePath">コピーする対象ファイルのフルパス</param>
+        /// <param name="destDirectoryPath">コピー先のディレクトリのパス</param>
+        public static void CopyFile(string targetFilePath, string destDirectoryPath)
+        {
+            if (!File.Exists(targetFilePath) || !Directory.Exists(destDirectoryPath))
+            {
+                return;
+            }
+
+            var fileNameWe = Path.GetFileNameWithoutExtension(targetFilePath);
+            var extension = Path.GetExtension(targetFilePath);
+
+            var counter = 1;
+            var destPath = Path.Combine(destDirectoryPath, fileNameWe + $"_copy_{counter:000}" + extension);
+            while (File.Exists(destPath))
+            {
+                destPath = Path.Combine(destDirectoryPath, fileNameWe + $"_copy_{counter:000}" + extension);
+                counter++;
+            }
+
+            File.Copy(targetFilePath, destPath, true);
+        }
     }
 }
