@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using BrowserController.Controllers;
 using ImageRenameHelper.Utils;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -60,21 +59,6 @@ namespace ImageRenameHelper.ViewModels
         public DelegateCommand ToggleCursorSyncModeCommand => new (() =>
         {
             EnabledCursorPositionSyncMode = !EnabledCursorPositionSyncMode;
-        });
-
-        public DelegateCommand BrowserControlCommand => new DelegateCommand(() =>
-        {
-            var pvm = PngInfoFileListViewModel;
-            var ivm = ImageToImageTargetFileListViewModel;
-
-            if (pvm.Files.Count != ivm.Files.Count || pvm.Files.Count + ivm.Files.Count == 0)
-            {
-                PublishSystemMessage("このコマンドを実行するには、２つの作業ディレクトリにファイルが一つ以上存在し、更に同数である必要があります。");
-                return;
-            }
-
-            I2IController.SetupBatchFromDirectory(
-                pvm.CurrentDirectoryPath, ivm.CurrentDirectoryPath);
         });
 
         private void PublishSystemMessage(string message)

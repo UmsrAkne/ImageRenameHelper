@@ -29,6 +29,7 @@ namespace ImageRenameHelper.ViewModels
         {
             dialogService = containerProvider.Resolve<IDialogService>();
             SetupWorkingDirectories();
+            SetDummies();
 
             ImagesViewModel.SystemMessagePublished += (_, msg) =>
             {
@@ -49,8 +50,6 @@ namespace ImageRenameHelper.ViewModels
         public ImagesViewModel ImagesViewModel { get; } = new ();
 
         public TemporaryFilesTabViewModel TemporaryFilesTabViewModel { get; } = new ();
-
-        public ImageToJsonTabViewModel ImageToJsonTabViewModel { get; } = new ();
 
         public DelegateCommand ShowWorkingDirectoryChangePageCommand => new DelegateCommand(() =>
         {
@@ -81,7 +80,8 @@ namespace ImageRenameHelper.ViewModels
         /// <param name="currentDirectoryName">作業ディレクトリのフルパスを指定します。無指定の場合、作業ディレクトリの名前は自動決定・作成されます。</param>
         private void SetupWorkingDirectories(string currentDirectoryName = "")
         {
-            var workingDir = new DirectoryInfo("working-directories");
+            var appDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var workingDir = new DirectoryInfo(Path.Combine(appDirectory!, "working-directories"));
             if (!workingDir.Exists)
             {
                 Directory.CreateDirectory(workingDir.FullName);
@@ -95,8 +95,6 @@ namespace ImageRenameHelper.ViewModels
 
             var pngInfoDir = Path.Combine(CurrentDirectory.FullName, "png-info-images");
             var imagesDir = Path.Combine(CurrentDirectory.FullName, "target-images");
-            var metaDataSourceDir = Path.Combine(CurrentDirectory.FullName, "metadata-sources");
-            var metaDataDir = Path.Combine(CurrentDirectory.FullName, "metadata");
             var temporaryDir = Path.Combine(CurrentDirectory.FullName, "temporary");
 
             Directory.CreateDirectory(CurrentDirectory.FullName);
@@ -111,10 +109,6 @@ namespace ImageRenameHelper.ViewModels
                 : Directory.CreateDirectory(imagesDir).FullName;
 
             ImagesViewModel.ImageToImageTargetFileListViewModel.LoadFiles();
-
-            ImageToJsonTabViewModel.MetadataSourceListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(metaDataSourceDir).FullName;
-
-            ImageToJsonTabViewModel.MetadataTextListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(metaDataDir).FullName;
 
             TemporaryFilesTabViewModel.TemporaryFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(temporaryDir).FullName;
         }
@@ -131,10 +125,18 @@ namespace ImageRenameHelper.ViewModels
                 dummyList2.Add(new FileListItem(new FileInfo($"targetImage-{i}.png")));
             }
 
+            var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            var testPath = Path.Combine(desktop, "myFiles", "Tests", "RiderProjects", "ImageRenameHelper");
+
             ImagesViewModel.PngInfoFileListViewModel.Files.AddRange(dummyList);
-            ImagesViewModel.PngInfoFileListViewModel.CurrentDirectoryPath = @"C:\Users\tests\PngInfos\";
+            ImagesViewModel.PngInfoFileListViewModel.CurrentDirectoryPath = Path.Combine(testPath, "png-info-images_1");
+            ImagesViewModel.PngInfoFileListViewModel.LoadFiles();
+
             ImagesViewModel.ImageToImageTargetFileListViewModel.Files.AddRange(dummyList2);
-            ImagesViewModel.ImageToImageTargetFileListViewModel.CurrentDirectoryPath = @"C:\Users\tests\Pictures\";
+            ImagesViewModel.ImageToImageTargetFileListViewModel.CurrentDirectoryPath = Path.Combine(testPath, "target-images_1");
+            ImagesViewModel.ImageToImageTargetFileListViewModel.LoadFiles();
+
+            Console.WriteLine(ImagesViewModel.ImageToImageTargetFileListViewModel.CurrentDirectoryPath);
         }
     }
 }
