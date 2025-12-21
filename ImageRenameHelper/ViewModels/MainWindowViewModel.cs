@@ -50,8 +50,6 @@ namespace ImageRenameHelper.ViewModels
 
         public TemporaryFilesTabViewModel TemporaryFilesTabViewModel { get; } = new ();
 
-        public ImageToJsonTabViewModel ImageToJsonTabViewModel { get; } = new ();
-
         public DelegateCommand ShowWorkingDirectoryChangePageCommand => new DelegateCommand(() =>
         {
             dialogService.ShowDialog(nameof(WorkingDirectoryChangePage), new DialogParameters(), result =>
@@ -95,8 +93,6 @@ namespace ImageRenameHelper.ViewModels
 
             var pngInfoDir = Path.Combine(CurrentDirectory.FullName, "png-info-images");
             var imagesDir = Path.Combine(CurrentDirectory.FullName, "target-images");
-            var metaDataSourceDir = Path.Combine(CurrentDirectory.FullName, "metadata-sources");
-            var metaDataDir = Path.Combine(CurrentDirectory.FullName, "metadata");
             var temporaryDir = Path.Combine(CurrentDirectory.FullName, "temporary");
 
             Directory.CreateDirectory(CurrentDirectory.FullName);
@@ -111,10 +107,6 @@ namespace ImageRenameHelper.ViewModels
                 : Directory.CreateDirectory(imagesDir).FullName;
 
             ImagesViewModel.ImageToImageTargetFileListViewModel.LoadFiles();
-
-            ImageToJsonTabViewModel.MetadataSourceListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(metaDataSourceDir).FullName;
-
-            ImageToJsonTabViewModel.MetadataTextListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(metaDataDir).FullName;
 
             TemporaryFilesTabViewModel.TemporaryFileListViewModel.CurrentDirectoryPath = Directory.CreateDirectory(temporaryDir).FullName;
         }
