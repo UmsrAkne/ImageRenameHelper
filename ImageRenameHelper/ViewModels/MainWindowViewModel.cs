@@ -79,7 +79,8 @@ namespace ImageRenameHelper.ViewModels
         /// <param name="currentDirectoryName">作業ディレクトリのフルパスを指定します。無指定の場合、作業ディレクトリの名前は自動決定・作成されます。</param>
         private void SetupWorkingDirectories(string currentDirectoryName = "")
         {
-            var workingDir = new DirectoryInfo("working-directories");
+            var appDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var workingDir = new DirectoryInfo(Path.Combine(appDirectory!, "working-directories"));
             if (!workingDir.Exists)
             {
                 Directory.CreateDirectory(workingDir.FullName);
