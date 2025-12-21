@@ -29,6 +29,7 @@ namespace ImageRenameHelper.ViewModels
         {
             dialogService = containerProvider.Resolve<IDialogService>();
             SetupWorkingDirectories();
+            SetDummies();
 
             ImagesViewModel.SystemMessagePublished += (_, msg) =>
             {
@@ -124,10 +125,18 @@ namespace ImageRenameHelper.ViewModels
                 dummyList2.Add(new FileListItem(new FileInfo($"targetImage-{i}.png")));
             }
 
+            var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            var testPath = Path.Combine(desktop, "myFiles", "Tests", "RiderProjects", "ImageRenameHelper");
+
             ImagesViewModel.PngInfoFileListViewModel.Files.AddRange(dummyList);
-            ImagesViewModel.PngInfoFileListViewModel.CurrentDirectoryPath = @"C:\Users\tests\PngInfos\";
+            ImagesViewModel.PngInfoFileListViewModel.CurrentDirectoryPath = Path.Combine(testPath, "png-info-images_1");
+            ImagesViewModel.PngInfoFileListViewModel.LoadFiles();
+
             ImagesViewModel.ImageToImageTargetFileListViewModel.Files.AddRange(dummyList2);
-            ImagesViewModel.ImageToImageTargetFileListViewModel.CurrentDirectoryPath = @"C:\Users\tests\Pictures\";
+            ImagesViewModel.ImageToImageTargetFileListViewModel.CurrentDirectoryPath = Path.Combine(testPath, "target-images_1");
+            ImagesViewModel.ImageToImageTargetFileListViewModel.LoadFiles();
+
+            Console.WriteLine(ImagesViewModel.ImageToImageTargetFileListViewModel.CurrentDirectoryPath);
         }
     }
 }
